@@ -19,7 +19,6 @@ class AddEntryActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener
     TimePickerDialog.OnTimeSetListener {
 
     lateinit var textView: TextView
-    lateinit var button: Button
     var day = 0
     var month: Int = 0
     var year: Int = 0
@@ -95,13 +94,18 @@ class AddEntryActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener
                 .collection("entries").add(newEntry)
                 .addOnSuccessListener { documentReference ->
                     Log.d(TAG, "Successfully added $newEntry with ID: ${documentReference.id}")
+                    Toast.makeText(
+                        this,
+                        "Successfully saved entry",
+                        Toast.LENGTH_SHORT
+                    ).show()
                     finish()
                 }
                 .addOnFailureListener { e ->
                     Log.w(TAG, "Error adding $newEntry", e)
                     Toast.makeText(
                         this,
-                        "Something went wrong while saving the entry.",
+                        "Something went wrong while saving the entry",
                         Toast.LENGTH_LONG
                     ).show()
                 }

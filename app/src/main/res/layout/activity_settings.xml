@@ -8,6 +8,7 @@
     android:gravity="center"
     android:id="@+id/settings_layout">
 
+
     <Button
         android:id="@+id/sign_out"
         android:layout_width="wrap_content"

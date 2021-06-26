@@ -17,10 +17,11 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/add_new_entry"
+            android:text="@string/add_distraction"
             android:textAlignment="center"
             android:textSize="32sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:textColor="@color/colorPrimary" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -53,7 +54,9 @@
                 android:id="@+id/distraction_add_entry"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/distraction" />
+                android:hint="@string/distraction"
+                android:autofillHints="@string/distraction"
+                android:inputType="text" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -73,7 +76,9 @@
                 android:id="@+id/how_feeling_add_entry"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/how_feeling" />
+                android:hint="@string/how_feeling"
+                android:autofillHints="@string/how_feeling"
+                android:inputType="text" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -100,7 +105,9 @@
                     android:id="@+id/internal_trigger_add_entry"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/internal" />
+                    android:text="@string/internal"
+                    android:checked="true"
+                    android:buttonTint="@color/colorPrimary" />
 
                 <Space
                     android:layout_width="30dp"
@@ -130,7 +137,9 @@
                 android:id="@+id/planning_problem_add_entry"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/planning_problem" />
+                android:hint="@string/planning_problem"
+                android:autofillHints="@string/planning_problem"
+                android:inputType="text" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -150,7 +159,9 @@
                 android:id="@+id/ideas_add_entry"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/ideas" />
+                android:hint="@string/ideas"
+                android:autofillHints="@string/ideas"
+                android:inputType="text" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -168,21 +179,22 @@
             android:layout_marginTop="20sp">
 
             <Button
-                android:id="@+id/add_entry_btn"
+                android:id="@+id/cancel_add_entry_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/add" />
+                android:text="@string/cancel"
+                style="?android:attr/buttonBarButtonStyle" />
 
             <Space
                 android:layout_width="30dp"
                 android:layout_height="wrap_content" />
 
             <Button
-                android:id="@+id/cancel_add_entry_btn"
+                android:id="@+id/add_entry_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/cancel"
-                style="?android:attr/buttonBarButtonStyle" />
+                android:text="@string/add" />
+
         </LinearLayout>
 
     </LinearLayout>

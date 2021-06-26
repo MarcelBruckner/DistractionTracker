@@ -6,8 +6,12 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Button
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.ktx.firestore
@@ -15,18 +19,31 @@ import com.google.firebase.ktx.Firebase
 
 class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnClickListener {
 
+    private var entryIds: ArrayList<String> = ArrayList()
     private var entries: ArrayList<Entry> = ArrayList()
     private val db = Firebase.firestore
-
+    private lateinit var swipeRefresh: SwipeRefreshLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         Log.d(TAG, "onCreate: started")
+
+        swipeRefresh = findViewById<SwipeRefreshLayout>(R.id.swipe_refresh)
+        swipeRefresh.setOnRefreshListener {
+            fetchEntries()
+        }
+
+        findViewById<FloatingActionButton>(R.id.floatingActionButton).setOnClickListener {
+            val addEntryIntent = Intent(this, AddEntryActivity::class.java)
+            startActivity(addEntryIntent)
+        }
     }
 
     private fun fetchEntries() {
-        val user = checkUserLoggedIn()
+        val user = checkUserLoggedIn() ?: return
+
+        swipeRefresh.isRefreshing = true
 
         db.collection("users").document(user.uid)
             .collection("entries").get()
@@ -34,12 +51,17 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnClickListener {
                 entries.clear()
                 for (document in result) {
                     Log.d(TAG, "${document.id} => ${document.data}")
+                    entryIds.add(document.id)
                     entries.add(Entry(document.data as Map<String, Any>))
                 }
                 initRecyclerView()
+                swipeRefresh.isRefreshing = false
+                Toast.makeText(this, "Successfully fetched entries", Toast.LENGTH_SHORT).show()
             }
             .addOnFailureListener { exception ->
-                Log.w(TAG, "Error getting documents.", exception)
+                Log.w(TAG, "Error getting entries", exception)
+                swipeRefresh.isRefreshing = false
+                Toast.makeText(this, "Error fetching entries", Toast.LENGTH_LONG).show()
             }
     }
 
@@ -50,35 +72,34 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnClickListener {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
+            R.id.reload -> {
+                fetchEntries()
+                true
+            }
             R.id.settings -> {
                 val settingsIntent = Intent(this, SettingsActivity::class.java)
                 startActivity(settingsIntent)
-                true
-            }
-            R.id.add_entry -> {
-                val addEntryIntent = Intent(this, AddEntryActivity::class.java)
-                startActivity(addEntryIntent)
                 true
             }
             else -> super.onOptionsItemSelected(item)
         }
     }
 
+
     override fun onStart() {
         super.onStart()
-        checkUserLoggedIn()
 
         fetchEntries()
     }
 
-    private fun checkUserLoggedIn(): FirebaseUser {
+    private fun checkUserLoggedIn(): FirebaseUser? {
         val user = FirebaseAuth.getInstance().currentUser
 
         if (user == null) {
             val signInIntent = Intent(this, SignInActivity::class.java)
             startActivity(signInIntent)
         }
-        return user!!
+        return user
     }
 
     private fun initRecyclerView() {
@@ -102,9 +123,9 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnClickListener {
         Log.d(TAG, "onClick: clicked $postition")
 
         val intent: Intent = Intent(this, DetailViewActivity::class.java).apply {
-//            putExtra("entry", entries[postition])
+            putExtra("entry", entries[postition])
+            putExtra("entryId", entryIds[postition])
         }
         startActivity(intent)
     }
-
 }

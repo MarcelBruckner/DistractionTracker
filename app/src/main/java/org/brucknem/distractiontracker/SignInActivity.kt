@@ -2,6 +2,7 @@ package org.brucknem.distractiontracker
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
@@ -21,7 +22,7 @@ class SignInActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
+
         val actionCodeSettings = ActionCodeSettings.newBuilder()
             .setAndroidPackageName( /* yourPackageName= */
                 "org.brucknem.distractiontracker",  /* installIfNotAvailable= */
@@ -35,24 +36,24 @@ class SignInActivity : AppCompatActivity() {
         // Choose authentication providers
         val providers = arrayListOf(
             AuthUI.IdpConfig.EmailBuilder().build(),
-            AuthUI.IdpConfig.EmailBuilder().enableEmailLinkSignIn().setActionCodeSettings(
-                actionCodeSettings
-            ).build(),
+//            AuthUI.IdpConfig.EmailBuilder().enableEmailLinkSignIn().setActionCodeSettings(
+//                actionCodeSettings
+//            ).build(),
             AuthUI.IdpConfig.GoogleBuilder().build(),
         )
-
-        if (AuthUI.canHandleIntent(intent)) {
-            val extras = intent.extras ?: return
-            val link = extras.getString(ExtraConstants.EMAIL_LINK_SIGN_IN)
-            if (link != null) {
-                val signInIntent = AuthUI.getInstance()
-                    .createSignInIntentBuilder()
-                    .setEmailLink(link)
-                    .setAvailableProviders(providers)
-                    .build()
-                signInLauncher.launch(signInIntent)
-            }
-        }
+//
+//        if (AuthUI.canHandleIntent(intent)) {
+//            val extras = intent.extras ?: return
+//            val link = extras.getString(ExtraConstants.EMAIL_LINK_SIGN_IN)
+//            if (link != null) {
+//                val signInIntent = AuthUI.getInstance()
+//                    .createSignInIntentBuilder()
+//                    .setEmailLink(link)
+//                    .setAvailableProviders(providers)
+//                    .build()
+//                signInLauncher.launch(signInIntent)
+//            }
+//        }
 
         // Create and launch sign-in intent
         val signInIntent = AuthUI.getInstance()
@@ -64,13 +65,10 @@ class SignInActivity : AppCompatActivity() {
 
 
     private fun onSignInResult(result: FirebaseAuthUIAuthenticationResult) {
-        val response = result.idpResponse
         if (result.resultCode == RESULT_OK) {
-            // Successfully signed in
-            val user = FirebaseAuth.getInstance().currentUser
+            Toast.makeText(this, "Successfully logged in", Toast.LENGTH_SHORT).show()
         } else {
-            val signInIntent = Intent(this, SignInActivity::class.java)
-            startActivity(signInIntent)
+            Toast.makeText(this, "Login failed", Toast.LENGTH_LONG).show()
         }
         finish()
     }

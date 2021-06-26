@@ -11,7 +11,6 @@ import com.bumptech.glide.Glide
 
 import de.hdodenhof.circleimageview.CircleImageView
 import java.text.SimpleDateFormat
-import java.util.*
 import kotlin.collections.ArrayList as ArrayList
 
 class RecyclerViewAdapter(
