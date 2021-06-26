@@ -38,8 +38,13 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnClickListener {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.settings -> {
-                val settingsInIntent = Intent(this, SettingsActivity::class.java)
-                startActivity(settingsInIntent)
+                val settingsIntent = Intent(this, SettingsActivity::class.java)
+                startActivity(settingsIntent)
+                true
+            }
+            R.id.add_entry -> {
+                val addEntryIntent = Intent(this, AddEntryActivity::class.java)
+                startActivity(addEntryIntent)
                 true
             }
             else -> super.onOptionsItemSelected(item)

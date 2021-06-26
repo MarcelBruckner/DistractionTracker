@@ -7,4 +7,6 @@
     <string name="sign_out">Sign Out</string>
     <string name="delete_account">Delete Account</string>
     <string name="add_entry">Add entry</string>
+    <string name="add_new_entry">Add new entry</string>
+    <string name="pick_date_and_time">Pick Date and Time</string>
 </resources>
