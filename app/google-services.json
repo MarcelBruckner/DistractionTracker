@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "441424802022",
+    "project_id": "distraction-tracker-nir-eyal",
+    "storage_bucket": "distraction-tracker-nir-eyal.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:441424802022:android:330605c8a04a18bc17cb27",
+        "android_client_info": {
+          "package_name": "org.brucknem.distractiontracker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "441424802022-0s08nbojvg077flditubqnmlbkdav70q.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "org.brucknem.distractiontracker",
+            "certificate_hash": "adbdb79f2fc3b4fbb593dd75a80c96ac7f324124"
+          }
+        },
+        {
+          "client_id": "441424802022-9pvhg3aflhcfstntedhg2lc9m8jq4miv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCQbihOkEYQbbQSrl_rpE0zJvoLmqUhb1Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "441424802022-9pvhg3aflhcfstntedhg2lc9m8jq4miv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
