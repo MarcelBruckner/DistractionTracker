@@ -5,23 +5,23 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.RelativeLayout
 import android.widget.TextView
-import android.widget.Toast
-import androidx.annotation.NonNull
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 
 import de.hdodenhof.circleimageview.CircleImageView
+import java.text.SimpleDateFormat
+import java.util.*
 import kotlin.collections.ArrayList as ArrayList
 
 class RecyclerViewAdapter(
-    private var images: ArrayList<String>,
-    private var imageNames: ArrayList<String>,
+    private var entries: ArrayList<Entry>,
     private var context: Context,
     private var onClickListener: OnClickListener
 ) : RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>() {
 
+    private val imageUrl = "https://cdn2.thecatapi.com/images/c2r.jpg"
+    private var dateFormat: java.text.DateFormat = SimpleDateFormat.getDateTimeInstance();
 
     companion object {
         private const val TAG = "RecyclerViewAdapter"
@@ -38,24 +38,35 @@ class RecyclerViewAdapter(
 
         Glide.with(context)
             .asBitmap()
-            .load(images[position])
+            .load(imageUrl)
             .into(holder.image)
 
-        holder.imageName.text = imageNames[position]
+        val entry = entries[position]
+
+        holder.datetime.text = dateFormat.format(entry.datetime)
+        holder.distraction.text = entry.distraction
+        holder.howFeeling.text = entry.howFeeling
+        holder.trigger.text = if (entry.internal) "Internal" else "External"
+        holder.planningProblem.text = entry.planningProblem
+        holder.ideas.text = entry.ideas
     }
 
     override fun getItemCount(): Int {
-        return imageNames.size
+        return entries.size
     }
 
     class ViewHolder(
         itemView: View,
         private var onClickListener: OnClickListener
-    ) : RecyclerView.ViewHolder(itemView), View.OnClickListener  {
+    ) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
 
         var image: CircleImageView = itemView.findViewById(R.id.image)
-        var imageName: TextView = itemView.findViewById(R.id.image_name)
-        var parentLayout: RelativeLayout = itemView.findViewById(R.id.parent_layout)
+        var datetime: TextView = itemView.findViewById(R.id.datetime_listitem)
+        var distraction: TextView = itemView.findViewById(R.id.distraction_listitem)
+        var howFeeling: TextView = itemView.findViewById(R.id.how_feeling_listitem)
+        var trigger: TextView = itemView.findViewById(R.id.trigger_listitem)
+        var planningProblem: TextView = itemView.findViewById(R.id.planning_problem_listitem)
+        var ideas: TextView = itemView.findViewById(R.id.ideas_listitem)
 
         init {
             itemView.setOnClickListener(this)

@@ -3,26 +3,79 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="15dp"
-    android:id="@+id/parent_layout"
-    >
+    android:id="@+id/parent_layout">
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:id="@+id/image"
         android:src="@mipmap/ic_launcher"
-        />
+        android:layout_centerVertical="true" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/dummy_text"
-        android:id="@+id/image_name"
+        android:id="@+id/datetime_listitem"
+        android:text="@string/pick_date_and_time"
         android:layout_toEndOf="@+id/image"
         android:textColor="@color/black"
-        android:layout_centerVertical="true"
-        android:layout_marginStart="30dp"
-        android:textSize="17sp"
-        />
+        android:layout_centerVertical="false"
+        android:layout_marginStart="30dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/distraction_listitem"
+        android:text="@string/distraction"
+        android:layout_toEndOf="@+id/image"
+        android:layout_below="@+id/datetime_listitem"
+        android:textColor="@color/black"
+        android:layout_centerVertical="false"
+        android:layout_marginStart="30dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/how_feeling_listitem"
+        android:text="@string/how_feeling"
+        android:layout_toEndOf="@+id/image"
+        android:layout_below="@+id/distraction_listitem"
+        android:textColor="@color/black"
+        android:layout_centerVertical="false"
+        android:layout_marginStart="30dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/trigger_listitem"
+        android:text="@string/trigger"
+        android:layout_toEndOf="@+id/image"
+        android:layout_below="@+id/how_feeling_listitem"
+        android:textColor="@color/black"
+        android:layout_centerVertical="false"
+        android:layout_marginStart="30dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/planning_problem_listitem"
+        android:text="@string/planning_problem"
+        android:layout_toEndOf="@+id/image"
+        android:layout_below="@+id/trigger_listitem"
+        android:textColor="@color/black"
+        android:layout_centerVertical="false"
+        android:layout_marginStart="30dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/ideas_listitem"
+        android:text="@string/planning_problem"
+        android:layout_toEndOf="@+id/image"
+        android:layout_below="@+id/planning_problem_listitem"
+        android:textColor="@color/black"
+        android:layout_centerVertical="false"
+        android:layout_marginStart="30dp" />
+
 
 </RelativeLayout>

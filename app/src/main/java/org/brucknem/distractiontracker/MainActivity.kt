@@ -16,8 +16,7 @@ import com.google.firebase.ktx.Firebase
 
 class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnClickListener {
 
-    private var images: ArrayList<String> = ArrayList()
-    private var imageNames: ArrayList<String> = ArrayList()
+    private var entries: ArrayList<Entry> = ArrayList()
     val db = Firebase.firestore
 
 
@@ -26,8 +25,14 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnClickListener {
         setContentView(R.layout.activity_main)
         Log.d(TAG, "onCreate: started")
 
-        initImageBitmaps()
+        mockEntries()
         initRecyclerView()
+    }
+
+    private fun mockEntries() {
+        for (i in 1..5) {
+            entries.add(Entry(12345, "yeet", "good", true, "Yes", "More yeet"))
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -65,30 +70,13 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnClickListener {
         }
     }
 
-    private fun initImageBitmaps() {
-        Log.d(TAG, "initImageBitmaps: preparing bitmaps")
-
-        images.add("https://cdn2.thecatapi.com/images/1u8.jpg")
-        images.add("https://cdn2.thecatapi.com/images/5hq.jpg")
-        images.add("https://cdn2.thecatapi.com/images/1ql.jpg")
-        images.add("https://cdn2.thecatapi.com/images/fdLoQnXHG.jpg")
-        images.add("https://cdn2.thecatapi.com/images/9DduryW4F.jpg")
-        images.add("https://cdn2.thecatapi.com/images/c2r.jpg")
-        images.add("https://cdn2.thecatapi.com/images/MTgxOTM1NA.jpg")
-
-        for (i in 1..images.size) {
-            imageNames.add("Cat No. $i")
-        }
-    }
-
     private fun initRecyclerView() {
         Log.d(TAG, "initRecyclerView: init recycler view")
 
         val recyclerView: RecyclerView = findViewById(R.id.recycler_view)
         val recyclerViewAdapter = RecyclerViewAdapter(
             context = this,
-            images = this.images,
-            imageNames = this.imageNames,
+            entries = entries,
             onClickListener = this
         )
         recyclerView.adapter = recyclerViewAdapter
@@ -103,8 +91,7 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnClickListener {
         Log.d(TAG, "onClick: clicked $postition")
 
         val intent: Intent = Intent(this, DetailViewActivity::class.java).apply {
-            putExtra("image", images[postition])
-            putExtra("image_name", imageNames[postition])
+//            putExtra("entry", entries[postition])
         }
         startActivity(intent)
     }

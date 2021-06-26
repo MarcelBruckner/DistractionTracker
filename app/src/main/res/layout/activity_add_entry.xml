@@ -29,12 +29,11 @@
             android:layout_marginTop="10dp">
 
             <TextView
-                android:id="@+id/textView"
+                android:id="@+id/datetime_add_entry"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:textAlignment="center"
-                android:text="fsdgsdfgds"
                 android:textSize="20sp" />
 
             <Button
@@ -51,6 +50,7 @@
             android:layout_marginTop="10dp">
 
             <EditText
+                android:id="@+id/distraction_add_entry"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/distraction" />
@@ -70,14 +70,15 @@
             android:layout_marginTop="10dp">
 
             <EditText
+                android:id="@+id/how_feeling_add_entry"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="How feeling" />
+                android:hint="@string/how_feeling" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/distraction"
+                android:text="@string/how_feeling"
                 android:layout_gravity="center"
                 android:textAlignment="center" />
         </LinearLayout>
@@ -96,6 +97,7 @@
                 android:gravity="center">
 
                 <RadioButton
+                    android:id="@+id/internal_trigger_add_entry"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/internal" />
@@ -125,6 +127,7 @@
             android:layout_marginTop="10dp">
 
             <EditText
+                android:id="@+id/planning_problem_add_entry"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/planning_problem" />
@@ -132,7 +135,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/ideas"
+                android:text="@string/planning_problem"
                 android:layout_gravity="center"
                 android:textAlignment="center" />
         </LinearLayout>
@@ -144,6 +147,7 @@
             android:layout_marginTop="10dp">
 
             <EditText
+                android:id="@+id/ideas_add_entry"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/ideas" />
@@ -164,6 +168,7 @@
             android:layout_marginTop="20sp">
 
             <Button
+                android:id="@+id/add_entry_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/add" />
@@ -173,6 +178,7 @@
                 android:layout_height="wrap_content" />
 
             <Button
+                android:id="@+id/cancel_add_entry_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/cancel"

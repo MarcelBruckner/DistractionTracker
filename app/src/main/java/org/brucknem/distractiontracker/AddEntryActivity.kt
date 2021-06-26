@@ -7,12 +7,8 @@ import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.text.format.DateFormat
 import android.util.Log
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
 import android.widget.*
 import java.text.SimpleDateFormat
-import java.time.LocalDateTime
 
 import java.util.Calendar;
 
@@ -43,8 +39,7 @@ class AddEntryActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         calendar = Calendar.getInstance()
 
-        textView = findViewById(R.id.textView)
-        button = findViewById(R.id.btnPick)
+        textView = findViewById(R.id.datetime_add_entry)
 
         myDay = calendar.get(Calendar.DAY_OF_MONTH)
         myMonth = calendar.get(Calendar.MONTH)
@@ -54,7 +49,7 @@ class AddEntryActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener
         myMinute = calendar.get(Calendar.MINUTE)
         setDateTime()
 
-        button.setOnClickListener {
+        findViewById<Button>(R.id.btnPick).setOnClickListener {
             day = calendar.get(Calendar.DAY_OF_MONTH)
             month = calendar.get(Calendar.MONTH)
             year = calendar.get(Calendar.YEAR)
@@ -62,6 +57,30 @@ class AddEntryActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener
                 DatePickerDialog(this, this, year, month, day)
             datePickerDialog.show()
         }
+
+        findViewById<Button>(R.id.add_entry_btn).setOnClickListener {
+            onAddEntry()
+        }
+
+        findViewById<Button>(R.id.cancel_add_entry_btn).setOnClickListener {
+            finish()
+        }
+    }
+
+    private fun onAddEntry() {
+        Log.d(TAG, "onAddEntry: clicked")
+
+        val newEntry = Entry(
+            datetime = calendar.timeInMillis,
+            findViewById<EditText>(R.id.distraction_add_entry).text.toString(),
+            findViewById<EditText>(R.id.how_feeling_add_entry).text.toString(),
+            findViewById<RadioButton>(R.id.internal_trigger_add_entry).isActivated,
+            findViewById<EditText>(R.id.planning_problem_add_entry).text.toString(),
+            findViewById<EditText>(R.id.ideas_add_entry).text.toString(),
+        )
+
+        Log.d(TAG, "onAddEntry: $newEntry")
+        finish()
     }
 
     override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
