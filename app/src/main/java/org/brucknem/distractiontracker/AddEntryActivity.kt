@@ -8,6 +8,9 @@ import android.os.Bundle;
 import android.text.format.DateFormat
 import android.util.Log
 import android.widget.*
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import java.text.SimpleDateFormat
 
 import java.util.Calendar;
@@ -72,15 +75,37 @@ class AddEntryActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener
 
         val newEntry = Entry(
             datetime = calendar.timeInMillis,
-            findViewById<EditText>(R.id.distraction_add_entry).text.toString(),
-            findViewById<EditText>(R.id.how_feeling_add_entry).text.toString(),
-            findViewById<RadioButton>(R.id.internal_trigger_add_entry).isActivated,
-            findViewById<EditText>(R.id.planning_problem_add_entry).text.toString(),
-            findViewById<EditText>(R.id.ideas_add_entry).text.toString(),
+            distraction = findViewById<EditText>(R.id.distraction_add_entry).text.toString(),
+            howFeeling = findViewById<EditText>(R.id.how_feeling_add_entry).text.toString(),
+            internal = findViewById<RadioButton>(R.id.internal_trigger_add_entry).isActivated,
+            planningProblem = findViewById<EditText>(R.id.planning_problem_add_entry).text.toString(),
+            ideas = findViewById<EditText>(R.id.ideas_add_entry).text.toString()
         )
 
         Log.d(TAG, "onAddEntry: $newEntry")
-        finish()
+
+        val user = FirebaseAuth.getInstance().currentUser
+        if (user == null) {
+            finish()
+        }
+
+        val db = Firebase.firestore
+        user?.let {
+            db.collection("users").document(it.uid)
+                .collection("entries").add(newEntry)
+                .addOnSuccessListener { documentReference ->
+                    Log.d(TAG, "Successfully added $newEntry with ID: ${documentReference.id}")
+                    finish()
+                }
+                .addOnFailureListener { e ->
+                    Log.w(TAG, "Error adding $newEntry", e)
+                    Toast.makeText(
+                        this,
+                        "Something went wrong while saving the entry.",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+        }
     }
 
     override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {

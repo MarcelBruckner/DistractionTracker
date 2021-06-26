@@ -5,34 +5,42 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
-import android.view.MenuInflater
 import android.view.MenuItem
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
 class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnClickListener {
 
     private var entries: ArrayList<Entry> = ArrayList()
-    val db = Firebase.firestore
+    private val db = Firebase.firestore
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         Log.d(TAG, "onCreate: started")
-
-        mockEntries()
-        initRecyclerView()
     }
 
-    private fun mockEntries() {
-        for (i in 1..5) {
-            entries.add(Entry(12345, "yeet", "good", true, "Yes", "More yeet"))
-        }
+    private fun fetchEntries() {
+        val user = checkUserLoggedIn()
+
+        db.collection("users").document(user.uid)
+            .collection("entries").get()
+            .addOnSuccessListener { result ->
+                entries.clear()
+                for (document in result) {
+                    Log.d(TAG, "${document.id} => ${document.data}")
+                    entries.add(Entry(document.data as Map<String, Any>))
+                }
+                initRecyclerView()
+            }
+            .addOnFailureListener { exception ->
+                Log.w(TAG, "Error getting documents.", exception)
+            }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -59,15 +67,18 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnClickListener {
     override fun onStart() {
         super.onStart()
         checkUserLoggedIn()
+
+        fetchEntries()
     }
 
-    private fun checkUserLoggedIn() {
+    private fun checkUserLoggedIn(): FirebaseUser {
         val user = FirebaseAuth.getInstance().currentUser
 
         if (user == null) {
             val signInIntent = Intent(this, SignInActivity::class.java)
             startActivity(signInIntent)
         }
+        return user!!
     }
 
     private fun initRecyclerView() {
