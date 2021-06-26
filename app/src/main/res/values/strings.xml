@@ -9,4 +9,12 @@
     <string name="add_entry">Add entry</string>
     <string name="add_new_entry">Add new entry</string>
     <string name="pick_date_and_time">Pick Date and Time</string>
+    <string name="distraction">Distraction</string>
+    <string name="ideas">Ideas</string>
+    <string name="planning_problem">Planning Problem</string>
+    <string name="external">External</string>
+    <string name="internal">Internal</string>
+    <string name="trigger">Trigger</string>
+    <string name="add">Add</string>
+    <string name="cancel">Cancel</string>
 </resources>
