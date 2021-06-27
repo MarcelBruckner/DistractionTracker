@@ -1,10 +1,12 @@
 package org.brucknem.distractiontracker.ui
 
+import android.os.Build
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
-import android.widget.Button
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
@@ -20,21 +22,27 @@ import org.brucknem.distractiontracker.util.InjectorUtils
 import org.brucknem.distractiontracker.util.UserProvider
 import org.brucknem.distractiontracker.viewmodel.EntriesViewModel
 import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.util.*
 
-class DetailViewActivity : AppCompatActivity() {
+
+class DetailViewActivity : AppCompatActivity(), DateTimePicker.OnDateTimeSelectedListener,
+    TextWatcher, RadioGroup.OnCheckedChangeListener {
     private lateinit var binding: ActivityDetailViewBinding
     private lateinit var user: FirebaseUser
     private lateinit var viewModel: EntriesViewModel
 
     private val imageUrl = "https://cdn2.thecatapi.com/images/c2r.jpg"
-    private var dateFormat: java.text.DateFormat = SimpleDateFormat.getDateTimeInstance()
 
     private lateinit var entry: Entry
+
+    private lateinit var dateTimePicker: DateTimePicker
+
+    private var lastUpdate = Calendar.getInstance().timeInMillis
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d(TAG, "onCreate: called")
-
         binding = ActivityDetailViewBinding.inflate(layoutInflater)
         setContentView(binding.root)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -46,6 +54,18 @@ class DetailViewActivity : AppCompatActivity() {
             )
 
         getIncomingIntent()
+
+        dateTimePicker = DateTimePicker(this, this)
+
+        binding.pickDateTimeBtn.setOnClickListener {
+            dateTimePicker.show()
+        }
+        binding.triggerDetailView.setOnCheckedChangeListener(this)
+
+        binding.distractionDetailView.addTextChangedListener(this)
+        binding.howFeelingDetailView.addTextChangedListener(this)
+        binding.planningProblemDetailView.addTextChangedListener(this)
+        binding.ideasDetailView.addTextChangedListener(this)
 
         findViewById<Button>(R.id.delete_entry_btn).setOnClickListener {
             val user = FirebaseAuth.getInstance().currentUser ?: return@setOnClickListener
@@ -98,13 +118,7 @@ class DetailViewActivity : AppCompatActivity() {
             .load(imageUrl)
             .into(findViewById(R.id.detail_image))
 
-        binding.datetimeDetailView.text = dateFormat.format(entry.datetime)
-        binding.distractionDetailView.text = entry.distraction
-        binding.howFeelingDetailView.text = entry.howFeeling
-        binding.triggerDetailView.text =
-            if (entry.internal) "Internal" else "External"
-        binding.planningProblemDetailView.text = entry.planningProblem
-        binding.ideasDetailView.text = entry.ideas
+        binding.entry = entry
     }
 
     private fun addEntry() {
@@ -118,5 +132,37 @@ class DetailViewActivity : AppCompatActivity() {
     override fun onSupportNavigateUp(): Boolean {
         finish()
         return super.onSupportNavigateUp()
+    }
+
+    override fun onSelected(datetime: Long) {
+        entry.datetime = datetime
+        addEntry()
+    }
+
+    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+        uploadIfLastUploadLongPast()
+    }
+
+    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+        uploadIfLastUploadLongPast()
+    }
+
+    override fun afterTextChanged(s: Editable?) {
+        uploadIfLastUploadLongPast()
+    }
+
+    private fun uploadIfLastUploadLongPast() {
+        val now = Calendar.getInstance().timeInMillis
+        if (now > lastUpdate + 10000) {
+            lastUpdate = now
+            addEntry()
+        }
+    }
+
+    override fun onCheckedChanged(group: RadioGroup?, checkedId: Int) {
+        val internal: Boolean = (group?.getChildAt(0) as RadioButton).isChecked
+        Log.d(TAG, "onCheckedChanged: $internal")
+
+        addEntry()
     }
 }

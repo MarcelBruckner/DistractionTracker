@@ -1,166 +1,211 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+<layout>
 
-    <LinearLayout
+    <data>
+
+        <import type="android.view.View" />
+
+        <import type="android.text.TextWatcher" />
+
+        <variable
+            name="entry"
+            type="org.brucknem.distractiontracker.data.Entry" />
+
+    </data>
+
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:id="@+id/detail_image"
-            android:scaleType="centerCrop"
-            android:src="@mipmap/ic_launcher"
-            android:contentDescription="@string/header_image" />
+        android:layout_height="wrap_content">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_margin="20dp">
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:id="@+id/detail_image"
+                android:scaleType="centerCrop"
+                android:src="@mipmap/ic_launcher"
+                android:contentDescription="@string/header_image" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_marginTop="10dp">
+                android:layout_margin="20dp">
 
-                <TextView
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/date_and_time" />
+                    android:orientation="vertical"
+                    android:layout_marginTop="10dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/datetime_detail_view"
-                    android:text="@string/pick_date_and_time"
-                    android:textSize="20sp"
-                    android:layout_marginStart="10dp" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/date_and_time" />
 
-            </LinearLayout>
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginTop="10dp">
+                        <TextView
+                            android:id="@+id/datetime_detail_view"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="10dp"
+                            android:gravity="center"
+                            android:text="@{entry.formatDateTime()}"
+                            android:textSize="18sp" />
 
-                <TextView
+                        <ImageButton
+                            android:id="@+id/pick_date_time_btn"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_marginEnd="5dp"
+                            android:src="@drawable/ic_access_time_icon"
+                            android:background="@null" />
+
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/distraction" />
+                    android:orientation="vertical"
+                    android:layout_marginTop="10dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/distraction_detail_view"
-                    android:layout_marginStart="10dp"
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/distraction" />
 
-                    android:text="@string/distraction"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/distraction_detail_view"
+                        android:layout_marginStart="10dp"
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginTop="10dp">
+                        android:text="@={entry.distraction}"
+                        android:textStyle="bold" />
+                </LinearLayout>
 
-                <TextView
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/how_feeling" />
+                    android:orientation="vertical"
+                    android:layout_marginTop="10dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/how_feeling_detail_view"
-                    android:layout_marginStart="10dp"
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/how_feeling" />
 
-                    android:text="@string/how_feeling"
-                    android:textSize="20sp" />
-            </LinearLayout>
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/how_feeling_detail_view"
+                        android:layout_marginStart="10dp"
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginTop="10dp">
+                        android:text="@={entry.howFeeling}" />
+                </LinearLayout>
 
-                <TextView
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/trigger" />
+                    android:orientation="vertical"
+                    android:layout_marginTop="10dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/trigger_detail_view"
-                    android:layout_marginStart="10dp"
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/trigger" />
 
-                    android:text="@string/trigger"
-                    android:textSize="20sp" />
-            </LinearLayout>
+                    <RadioGroup
+                        android:id="@+id/trigger_detail_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:orientation="horizontal">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginTop="10dp">
+                        <RadioButton
+                            android:id="@+id/internal_trigger_detail_view"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/internal"
+                            android:layout_weight="1"
+                            android:checked="@={entry.internal}"
+                            android:buttonTint="@color/primary" />
 
-                <TextView
+                        <RadioButton
+                            android:id="@+id/external_trigger_detail_view"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/external"
+                            android:layout_weight="1"
+                            android:checked="@={!entry.internal}"
+                            android:buttonTint="@color/primary" />
+                    </RadioGroup>
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/planning_problem" />
+                    android:orientation="vertical"
+                    android:layout_marginTop="10dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/planning_problem_detail_view"
-                    android:layout_marginStart="10dp"
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/planning_problem" />
 
-                    android:text="@string/planning_problem"
-                    android:textSize="20sp" />
-            </LinearLayout>
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/planning_problem_detail_view"
+                        android:layout_marginStart="10dp"
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginTop="10dp">
+                        android:text="@={entry.planningProblem}" />
+                </LinearLayout>
 
-                <TextView
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/ideas" />
+                    android:orientation="vertical"
+                    android:layout_marginTop="10dp">
 
-                <TextView
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/ideas" />
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/ideas_detail_view"
+                        android:layout_marginStart="10dp"
+                        android:text="@={entry.ideas}"
+                        android:textStyle="bold|italic" />
+
+                </LinearLayout>
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="50sp" />
+
+                <Button
+                    android:id="@+id/delete_entry_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/ideas_detail_view"
-                    android:layout_marginStart="10dp"
-
-                    android:text="@string/ideas"
-                    android:textSize="20sp"
-                    android:textStyle="bold|italic" />
-
+                    android:layout_gravity="center"
+                    android:text="Delete Entry" />
             </LinearLayout>
-
-            <Space
-                android:layout_width="wrap_content"
-                android:layout_height="20sp" />
-
-            <Button
-                android:id="@+id/delete_entry_btn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Delete Entry" />
         </LinearLayout>
-    </LinearLayout>
-</ScrollView>
+    </ScrollView>
+</layout>

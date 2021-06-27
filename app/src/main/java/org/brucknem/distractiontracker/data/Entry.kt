@@ -1,23 +1,24 @@
 package org.brucknem.distractiontracker.data
 
+import java.text.SimpleDateFormat
 import java.util.*
 
 data class Entry(
     var id: Long,
     var datetime: Long,
-    var distraction: String?,
-    var howFeeling: String?,
+    var distraction: String,
+    var howFeeling: String,
     var internal: Boolean,
-    var planningProblem: String?,
-    var ideas: String?
+    var planningProblem: String,
+    var ideas: String
 ) {
     constructor(
         datetime: Long,
-        distraction: String?,
-        howFeeling: String?,
+        distraction: String,
+        howFeeling: String,
         internal: Boolean,
-        planningProblem: String?,
-        ideas: String?
+        planningProblem: String,
+        ideas: String
     ) : this(
         id = Calendar.getInstance().timeInMillis,
         datetime = datetime,
@@ -46,4 +47,8 @@ data class Entry(
         planningProblem = map["planningProblem"] as String,
         ideas = map["ideas"] as String,
     )
+
+    private var dateFormat: java.text.DateFormat = SimpleDateFormat.getDateTimeInstance()
+
+    fun formatDateTime(): String = dateFormat.format(datetime)
 }
