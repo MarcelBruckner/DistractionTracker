@@ -1,4 +1,4 @@
-package org.brucknem.distractiontracker
+package org.brucknem.distractiontracker.ui
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -7,14 +7,19 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import org.brucknem.distractiontracker.R
+import org.brucknem.distractiontracker.data.Entry
+import org.brucknem.distractiontracker.databinding.ActivityMainBinding
+import org.brucknem.distractiontracker.util.InjectorUtils
+import org.brucknem.distractiontracker.viewmodel.EntriesViewModel
 import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnClickListener {
@@ -22,28 +27,51 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnClickListener {
     private var entryIds: ArrayList<String> = ArrayList()
     private var entries: ArrayList<Entry> = ArrayList()
     private val db = Firebase.firestore
-    private lateinit var swipeRefresh: SwipeRefreshLayout
+
+    //    private lateinit var swipeRefresh: SwipeRefreshLayout
+    private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
         Log.d(TAG, "onCreate: started")
 
-        swipeRefresh = findViewById<SwipeRefreshLayout>(R.id.swipe_refresh)
-        swipeRefresh.setOnRefreshListener {
-            fetchEntries()
-        }
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        findViewById<FloatingActionButton>(R.id.floatingActionButton).setOnClickListener {
-            val addEntryIntent = Intent(this, AddEntryActivity::class.java)
-            startActivity(addEntryIntent)
-        }
+        initializeUI()
+
+//        swipeRefresh = findViewById<SwipeRefreshLayout>(R.id.swipe_refresh)
+//        swipeRefresh.setOnRefreshListener {
+//            fetchEntries()
+//        }
+//
+//        findViewById<FloatingActionButton>(R.id.floatingActionButton).setOnClickListener {
+//            val addEntryIntent = Intent(this, AddEntryActivity::class.java)
+//            startActivity(addEntryIntent)
+//        }
+    }
+
+    private fun initializeUI() {
+        val viewModel = ViewModelProvider(this, InjectorUtils.provideEntriesViewModelFactory()).get(
+            EntriesViewModel::class.java
+        )
+
+        viewModel.getEntries().observe(this, { entries ->
+            initRecyclerView(entries)
+        })
+//        binding.buttonAddQuote.setOnClickListener {
+//            val quote =
+//                Quote(binding.editTextQuote.text.toString(), binding.editTextAuthor.text.toString())
+//            viewModel.addQuote(quote)
+//            binding.editTextQuote.setText("")
+//            binding.editTextAuthor.setText("")
+//        }
     }
 
     private fun fetchEntries() {
         val user = checkUserLoggedIn() ?: return
 
-        swipeRefresh.isRefreshing = true
+//        swipeRefresh.isRefreshing = true
 
         db.collection("users").document(user.uid)
             .collection("entries").get()
@@ -62,12 +90,12 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnClickListener {
                     entries.add(entry.value.second)
                 }
 
-                initRecyclerView()
-                swipeRefresh.isRefreshing = false
+                initRecyclerView(entries)
+//                swipeRefresh.isRefreshing = false
                 Toast.makeText(this, "Successfully fetched entries", Toast.LENGTH_SHORT).show()
             }.addOnFailureListener { exception ->
                 Log.w(TAG, "Error getting entries", exception)
-                swipeRefresh.isRefreshing = false
+//                swipeRefresh.isRefreshing = false
                 Toast.makeText(this, "Error fetching entries", Toast.LENGTH_LONG).show()
             }
     }
@@ -96,7 +124,7 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnClickListener {
     override fun onStart() {
         super.onStart()
 
-        fetchEntries()
+//        fetchEntries()
     }
 
     private fun checkUserLoggedIn(): FirebaseUser? {
@@ -109,10 +137,10 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnClickListener {
         return user
     }
 
-    private fun initRecyclerView() {
+    private fun initRecyclerView(entries: List<Entry>) {
         Log.d(TAG, "initRecyclerView: init recycler view")
 
-        val recyclerView: RecyclerView = findViewById(R.id.recycler_view)
+        val recyclerView: RecyclerView = binding.recyclerView
         val recyclerViewAdapter = RecyclerViewAdapter(
             context = this,
             entries = entries,
@@ -126,12 +154,11 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnClickListener {
         private const val TAG = "MainActivity"
     }
 
-    override fun onClick(postition: Int) {
-        Log.d(TAG, "onClick: clicked $postition")
+    override fun onClick(position: Int) {
+        Log.d(TAG, "onClick: clicked $position")
 
         val intent: Intent = Intent(this, DetailViewActivity::class.java).apply {
-            putExtra("entry", entries[postition])
-            putExtra("entryId", entryIds[postition])
+            putExtra("entryPosition", position)
         }
         startActivity(intent)
     }

@@ -1,4 +1,4 @@
-package org.brucknem.distractiontracker
+package org.brucknem.distractiontracker.ui
 
 import android.os.Bundle
 import android.util.Log
@@ -6,13 +6,21 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import org.brucknem.distractiontracker.R
+import org.brucknem.distractiontracker.data.Entry
+import org.brucknem.distractiontracker.databinding.ActivityDetailViewBinding
+import org.brucknem.distractiontracker.util.InjectorUtils
+import org.brucknem.distractiontracker.viewmodel.EntriesViewModel
 import java.text.SimpleDateFormat
 
 class DetailViewActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityDetailViewBinding
+
     private val imageUrl = "https://cdn2.thecatapi.com/images/c2r.jpg"
     private var dateFormat: java.text.DateFormat = SimpleDateFormat.getDateTimeInstance()
 
@@ -23,7 +31,8 @@ class DetailViewActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         Log.d(TAG, "onCreate: called")
 
-        setContentView(R.layout.activity_detail_view)
+        binding = ActivityDetailViewBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         getIncomingIntent()
@@ -49,15 +58,23 @@ class DetailViewActivity : AppCompatActivity() {
 
     private fun getIncomingIntent() {
         Log.d(TAG, "getIncomingIntent: checking for incoming intents")
-        if (intent.hasExtra("entry") && intent.hasExtra("entryId")) {
-            Log.d(TAG, "getIncomingIntent: found intent extras")
 
-            entry = intent.getParcelableExtra("entry")!!
-            entryId = intent.getStringExtra("entryId")!!
-            setEntry()
-        } else {
+        val position = intent.getIntExtra("entryPosition", -1)
+        if (position < 0) {
             finish()
         }
+
+        val viewModel =
+            ViewModelProvider(this, InjectorUtils.provideEntriesViewModelFactory()).get(
+                EntriesViewModel::class.java
+            )
+
+        viewModel.getEntries().observe(this, { entries ->
+            run {
+                entry = entries[position]
+                setEntry()
+            }
+        })
     }
 
     private fun setEntry() {

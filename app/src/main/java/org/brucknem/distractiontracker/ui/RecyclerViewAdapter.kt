@@ -1,4 +1,4 @@
-package org.brucknem.distractiontracker
+package org.brucknem.distractiontracker.ui
 
 import android.content.Context
 import android.util.Log
@@ -10,11 +10,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 
 import de.hdodenhof.circleimageview.CircleImageView
+import org.brucknem.distractiontracker.R
+import org.brucknem.distractiontracker.data.Entry
 import java.text.SimpleDateFormat
 import kotlin.collections.ArrayList as ArrayList
 
 class RecyclerViewAdapter(
-    private var entries: ArrayList<Entry>,
+    private var entries: List<Entry>,
     private var context: Context,
     private var onClickListener: OnClickListener
 ) : RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>() {

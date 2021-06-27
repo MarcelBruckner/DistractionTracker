@@ -1,4 +1,4 @@
-package org.brucknem.distractiontracker
+package org.brucknem.distractiontracker.ui
 
 import android.content.Intent
 import android.os.Bundle

@@ -1,14 +1,11 @@
-package org.brucknem.distractiontracker
+package org.brucknem.distractiontracker.ui
 
 import android.app.AlertDialog
-import android.app.Dialog
-import android.content.Context
-import android.content.DialogInterface
 import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.DialogFragment
 import com.firebase.ui.auth.AuthUI
+import org.brucknem.distractiontracker.R
 
 class SettingsActivity : AppCompatActivity() {
 

@@ -1,4 +1,4 @@
-package org.brucknem.distractiontracker
+package org.brucknem.distractiontracker.ui
 
 import androidx.appcompat.app.AppCompatActivity
 
@@ -11,6 +11,8 @@ import android.widget.*
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import org.brucknem.distractiontracker.R
+import org.brucknem.distractiontracker.data.Entry
 import java.text.SimpleDateFormat
 
 import java.util.Calendar;
