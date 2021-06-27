@@ -84,8 +84,8 @@ class DetailViewActivity : AppCompatActivity(), DateTimePicker.OnDateTimeSelecte
         val entryId = intent.getLongExtra("entryId", -1)
         if (entryId < 0) {
             entry = Entry()
+//            viewModel.addEntry(entry)
             setEntry()
-            viewModel.addEntry(entry)
             return
         }
 

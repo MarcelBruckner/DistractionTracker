@@ -35,8 +35,6 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnEntryClickListen
             )
         binding.swipeRefresh.setOnRefreshListener {
             initializeUI()
-            viewModel.reloadDatabase()
-            initializeUI()
             binding.swipeRefresh.isRefreshing = false
         }
 
@@ -44,19 +42,16 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnEntryClickListen
             switchToDetail(-1)
         }
         initializeUI()
+
+        viewModel.getEntries().observe(this, {
+            initRecyclerView(entries = it)
+        })
     }
 
     private fun initializeUI() {
         user = UserManager.checkUserLoggedIn(this) ?: return
 
-        if (UserManager.wasLoggedOut) {
-            viewModel.reloadDatabase()
-            UserManager.wasLoggedOut = false
-        }
-
-        viewModel.getEntries().observe(this, {
-            initRecyclerView(entries = it)
-        })
+        viewModel.reloadDatabase()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -83,7 +78,6 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnEntryClickListen
 
     override fun onStart() {
         super.onStart()
-
         initializeUI()
     }
 

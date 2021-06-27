@@ -23,7 +23,6 @@ class FirebaseDao : DatabaseAccessObject() {
 
     override fun reloadDatabase() {
         fetchEntries()
-        super.reloadDatabase()
     }
 
     private fun fetchEntries() {
@@ -37,6 +36,8 @@ class FirebaseDao : DatabaseAccessObject() {
                     Log.d(TAG, "${it.id} => ${it.data}")
                     entryList.add(Entry(it.data as Map<String, Any>))
                 }
+                entryList.sortBy { it.datetime }
+                entryList.reverse()
                 refresh()
             }.addOnFailureListener { exception ->
                 Log.w(TAG, "Error getting entries", exception)

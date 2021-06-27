@@ -11,8 +11,6 @@ import org.brucknem.distractiontracker.ui.SignInActivity
 
 object UserManager {
 
-    var wasLoggedOut = false
-
     fun checkUserLoggedIn(context: Context? = null): FirebaseUser? {
         val user = FirebaseAuth.getInstance().currentUser
 
@@ -30,7 +28,6 @@ object UserManager {
             .addOnCompleteListener {
                 onLoggedOutListener.onLoggedOut()
             }
-        wasLoggedOut = true
     }
 
     fun deleteAccount(context: Context, onLoggedOutListener: OnLoggedOutListener) {
@@ -55,7 +52,6 @@ object UserManager {
 
         val dialog: AlertDialog? = builder.create()
         dialog?.show()
-        wasLoggedOut = true
     }
 
     interface OnLoggedOutListener {
