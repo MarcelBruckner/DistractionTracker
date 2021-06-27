@@ -13,12 +13,11 @@ import de.hdodenhof.circleimageview.CircleImageView
 import org.brucknem.distractiontracker.R
 import org.brucknem.distractiontracker.data.Entry
 import java.text.SimpleDateFormat
-import kotlin.collections.ArrayList as ArrayList
 
 class RecyclerViewAdapter(
     private var entries: List<Entry>,
     private var context: Context,
-    private var onClickListener: OnClickListener
+    private var onClickListener: OnEntryClickListener
 ) : RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>() {
 
     private val imageUrl = "https://cdn2.thecatapi.com/images/c2r.jpg"
@@ -44,6 +43,7 @@ class RecyclerViewAdapter(
 
         val entry = entries[position]
 
+        holder.entryId = entry.id
         holder.datetime.text = dateFormat.format(entry.datetime)
         holder.distraction.text = entry.distraction
         holder.howFeeling.text = entry.howFeeling
@@ -58,9 +58,10 @@ class RecyclerViewAdapter(
 
     class ViewHolder(
         itemView: View,
-        private var onClickListener: OnClickListener
+        private var onClickListener: OnEntryClickListener
     ) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
 
+        var entryId: Long = 0
         var image: CircleImageView = itemView.findViewById(R.id.image)
         var datetime: TextView = itemView.findViewById(R.id.datetime_listitem)
         var distraction: TextView = itemView.findViewById(R.id.distraction_listitem)
@@ -74,12 +75,12 @@ class RecyclerViewAdapter(
         }
 
         override fun onClick(v: View?) {
-            onClickListener.onClick(absoluteAdapterPosition)
+            onClickListener.onClick(entryId)
         }
 
     }
 
-    interface OnClickListener {
-        fun onClick(postition: Int)
+    interface OnEntryClickListener {
+        fun onClick(entryId: Long)
     }
 }

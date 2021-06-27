@@ -28,6 +28,15 @@ data class Entry(
         ideas = ideas
     )
 
+    constructor() : this(
+        datetime = Calendar.getInstance().timeInMillis,
+        distraction = "",
+        howFeeling = "",
+        internal = true,
+        planningProblem = "",
+        ideas = ""
+    )
+
     constructor(map: Map<String, Any>) : this(
         id = map["id"] as Long,
         datetime = map["datetime"] as Long,

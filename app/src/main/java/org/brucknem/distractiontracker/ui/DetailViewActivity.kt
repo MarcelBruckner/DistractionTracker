@@ -9,23 +9,27 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import org.brucknem.distractiontracker.R
 import org.brucknem.distractiontracker.data.Entry
+import org.brucknem.distractiontracker.data.FirebaseDao
 import org.brucknem.distractiontracker.databinding.ActivityDetailViewBinding
 import org.brucknem.distractiontracker.util.InjectorUtils
+import org.brucknem.distractiontracker.util.UserProvider
 import org.brucknem.distractiontracker.viewmodel.EntriesViewModel
 import java.text.SimpleDateFormat
 
 class DetailViewActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDetailViewBinding
+    private lateinit var user: FirebaseUser
+    private lateinit var viewModel: EntriesViewModel
 
     private val imageUrl = "https://cdn2.thecatapi.com/images/c2r.jpg"
     private var dateFormat: java.text.DateFormat = SimpleDateFormat.getDateTimeInstance()
 
     private lateinit var entry: Entry
-    private lateinit var entryId: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,6 +39,12 @@ class DetailViewActivity : AppCompatActivity() {
         setContentView(binding.root)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
+        user = UserProvider.checkUserLoggedIn(this) ?: return
+        viewModel =
+            ViewModelProvider(this, InjectorUtils.provideFirebaseEntriesViewModelFactory(user)).get(
+                EntriesViewModel::class.java
+            )
+
         getIncomingIntent()
 
         findViewById<Button>(R.id.delete_entry_btn).setOnClickListener {
@@ -42,7 +52,7 @@ class DetailViewActivity : AppCompatActivity() {
 
             val db = Firebase.firestore
             db.collection("users").document(user.uid)
-                .collection("entries").document(entryId)
+                .collection("entries").document(entry.id.toString())
                 .delete()
                 .addOnSuccessListener {
                     Log.d(TAG, "DocumentSnapshot successfully deleted!")
@@ -59,19 +69,22 @@ class DetailViewActivity : AppCompatActivity() {
     private fun getIncomingIntent() {
         Log.d(TAG, "getIncomingIntent: checking for incoming intents")
 
-        val position = intent.getIntExtra("entryPosition", -1)
-        if (position < 0) {
-            finish()
+        val entryId = intent.getLongExtra("entryId", -1)
+        if (entryId < 0) {
+            entry = Entry()
+            setEntry()
+            addEntry()
+            return
         }
-
-        val viewModel =
-            ViewModelProvider(this, InjectorUtils.provideEntriesViewModelFactory()).get(
-                EntriesViewModel::class.java
-            )
 
         viewModel.getEntries().observe(this, { entries ->
             run {
-                entry = entries[position]
+                entries.forEach {
+                    if (it.id == entryId) {
+                        entry = it
+                        return@forEach
+                    }
+                }
                 setEntry()
             }
         })
@@ -85,13 +98,17 @@ class DetailViewActivity : AppCompatActivity() {
             .load(imageUrl)
             .into(findViewById(R.id.detail_image))
 
-        findViewById<TextView>(R.id.datetime_detail_view).text = dateFormat.format(entry.datetime)
-        findViewById<TextView>(R.id.distraction_detail_view).text = entry.distraction
-        findViewById<TextView>(R.id.how_feeling_detail_view).text = entry.howFeeling
-        findViewById<TextView>(R.id.trigger_detail_view).text =
+        binding.datetimeDetailView.text = dateFormat.format(entry.datetime)
+        binding.distractionDetailView.text = entry.distraction
+        binding.howFeelingDetailView.text = entry.howFeeling
+        binding.triggerDetailView.text =
             if (entry.internal) "Internal" else "External"
-        findViewById<TextView>(R.id.planning_problem_detail_view).text = entry.planningProblem
-        findViewById<TextView>(R.id.ideas_detail_view).text = entry.ideas
+        binding.planningProblemDetailView.text = entry.planningProblem
+        binding.ideasDetailView.text = entry.ideas
+    }
+
+    private fun addEntry() {
+        viewModel.addEntry(entry)
     }
 
     companion object {
