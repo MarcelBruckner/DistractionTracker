@@ -11,4 +11,6 @@ class EntriesViewModel(
     fun getEntries() = entryRepository.getEntries()
 
     fun addEntry(entry: Entry) = entryRepository.addEntry(entry)
+
+    fun deleteEntry(entryId: Long) = entryRepository.deleteEntry(entryId)
 }

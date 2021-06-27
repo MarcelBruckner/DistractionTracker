@@ -52,7 +52,6 @@ class DetailViewActivity : AppCompatActivity(), DateTimePicker.OnDateTimeSelecte
             ViewModelProvider(this, InjectorUtils.provideFirebaseEntriesViewModelFactory(user)).get(
                 EntriesViewModel::class.java
             )
-
         getIncomingIntent()
 
         dateTimePicker = DateTimePicker(this, this)
@@ -61,28 +60,14 @@ class DetailViewActivity : AppCompatActivity(), DateTimePicker.OnDateTimeSelecte
             dateTimePicker.show()
         }
         binding.triggerDetailView.setOnCheckedChangeListener(this)
-
         binding.distractionDetailView.addTextChangedListener(this)
         binding.howFeelingDetailView.addTextChangedListener(this)
         binding.planningProblemDetailView.addTextChangedListener(this)
         binding.ideasDetailView.addTextChangedListener(this)
-
-        findViewById<Button>(R.id.delete_entry_btn).setOnClickListener {
-            val user = FirebaseAuth.getInstance().currentUser ?: return@setOnClickListener
-
-            val db = Firebase.firestore
-            db.collection("users").document(user.uid)
-                .collection("entries").document(entry.id.toString())
-                .delete()
-                .addOnSuccessListener {
-                    Log.d(TAG, "DocumentSnapshot successfully deleted!")
-                    Toast.makeText(this, "Successfully deleted entry", Toast.LENGTH_LONG).show()
-                    finish()
-                }
-                .addOnFailureListener { e ->
-                    Log.w(TAG, "Error deleting document", e)
-                    Toast.makeText(this, "Error deleting entry", Toast.LENGTH_LONG).show()
-                }
+        binding.deleteEntryBtn.setOnClickListener {
+            addEntry()
+            viewModel.deleteEntry(entry.id)
+            finish()
         }
     }
 
@@ -130,6 +115,7 @@ class DetailViewActivity : AppCompatActivity(), DateTimePicker.OnDateTimeSelecte
     }
 
     override fun onSupportNavigateUp(): Boolean {
+        addEntry()
         finish()
         return super.onSupportNavigateUp()
     }

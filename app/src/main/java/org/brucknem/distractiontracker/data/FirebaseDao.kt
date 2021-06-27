@@ -1,10 +1,14 @@
 package org.brucknem.distractiontracker.data
 
 import android.util.Log
+import android.widget.Button
 import android.widget.Toast
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import org.brucknem.distractiontracker.R
+import org.brucknem.distractiontracker.ui.DetailViewActivity
 import org.brucknem.distractiontracker.ui.MainActivity
 
 
@@ -46,6 +50,22 @@ class FirebaseDao(
             }
             .addOnFailureListener { e ->
                 Log.w(TAG, "Error adding $entry", e)
+            }
+    }
+
+    override fun deleteEntry(entryId: Long) {
+        super.deleteEntry(entryId)
+
+        db.collection("users").document(user.uid)
+            .collection("entries").document(entryId.toString())
+            .delete()
+            .addOnSuccessListener {
+                Log.d(
+                    TAG, "Successfully deleted $entryId"
+                )
+            }
+            .addOnFailureListener { e ->
+                Log.w(TAG, "Error deleting $entryId", e)
             }
     }
 

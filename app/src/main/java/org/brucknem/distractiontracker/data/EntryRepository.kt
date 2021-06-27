@@ -14,6 +14,10 @@ class EntryRepository private constructor(
         return entryDao.getEntries()
     }
 
+    fun deleteEntry(entryId: Long) {
+        entryDao.deleteEntry(entryId)
+    }
+
     companion object {
         @Volatile
         private var instance: EntryRepository? = null

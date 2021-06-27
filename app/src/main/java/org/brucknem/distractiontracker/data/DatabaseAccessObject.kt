@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 
 abstract class DatabaseAccessObject {
     protected val entryList = mutableListOf<Entry>()
-    protected val entries = MutableLiveData<List<Entry>>()
+    private val entries = MutableLiveData<List<Entry>>()
 
     init {
         refresh()
@@ -17,6 +17,12 @@ abstract class DatabaseAccessObject {
 
     open fun addEntry(entry: Entry) {
         entryList.add(entry)
+        refresh()
+    }
+
+    open fun deleteEntry(entryId: Long) {
+        val entry = entryList.find { it.id == entryId } ?: return
+        entryList.remove(entry)
         refresh()
     }
 
