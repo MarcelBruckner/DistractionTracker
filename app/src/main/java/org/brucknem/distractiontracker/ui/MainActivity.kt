@@ -6,21 +6,16 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 import org.brucknem.distractiontracker.R
 import org.brucknem.distractiontracker.data.Entry
 import org.brucknem.distractiontracker.databinding.ActivityMainBinding
 import org.brucknem.distractiontracker.util.InjectorUtils
 import org.brucknem.distractiontracker.util.UserProvider
 import org.brucknem.distractiontracker.viewmodel.EntriesViewModel
-import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnEntryClickListener {
 
@@ -52,8 +47,8 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnEntryClickListen
     }
 
     private fun initializeUI() {
-        viewModel.getEntries().observe(this, { entries ->
-            initRecyclerView(entries)
+        viewModel.getEntries().observe(this, {
+            initRecyclerView(entries = it)
         })
     }
 
@@ -65,7 +60,8 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnEntryClickListen
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.reload -> {
-                initializeUI()
+                viewModel.reloadDatabase()
+                binding.swipeRefresh.isRefreshing = false
                 true
             }
             R.id.settings -> {
