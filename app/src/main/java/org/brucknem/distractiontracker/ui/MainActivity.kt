@@ -25,17 +25,24 @@ import kotlin.collections.ArrayList
 class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnEntryClickListener {
 
     private lateinit var binding: ActivityMainBinding
+    private lateinit var user: FirebaseUser
+    private lateinit var viewModel: EntriesViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d(TAG, "onCreate: started")
-
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        user = UserProvider.checkUserLoggedIn(this) ?: return
+        viewModel =
+            ViewModelProvider(this, InjectorUtils.provideFirebaseEntriesViewModelFactory(user)).get(
+                EntriesViewModel::class.java
+            )
+        initializeUI()
+
         binding.swipeRefresh.setOnRefreshListener {
-            // TODO
-            Toast.makeText(this, "Not yet implemented", Toast.LENGTH_SHORT).show()
+            viewModel.reloadDatabase()
             binding.swipeRefresh.isRefreshing = false
         }
 
@@ -45,13 +52,6 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnEntryClickListen
     }
 
     private fun initializeUI() {
-        val user = UserProvider.checkUserLoggedIn(this) ?: return
-
-        val viewModel =
-            ViewModelProvider(this, InjectorUtils.provideFirebaseEntriesViewModelFactory(user)).get(
-                EntriesViewModel::class.java
-            )
-
         viewModel.getEntries().observe(this, { entries ->
             initRecyclerView(entries)
         })

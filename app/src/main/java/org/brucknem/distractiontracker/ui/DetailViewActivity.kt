@@ -1,28 +1,21 @@
 package org.brucknem.distractiontracker.ui
 
-import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.widget.*
-import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 import org.brucknem.distractiontracker.R
 import org.brucknem.distractiontracker.data.Entry
-import org.brucknem.distractiontracker.data.FirebaseDao
 import org.brucknem.distractiontracker.databinding.ActivityDetailViewBinding
 import org.brucknem.distractiontracker.util.InjectorUtils
 import org.brucknem.distractiontracker.util.UserProvider
 import org.brucknem.distractiontracker.viewmodel.EntriesViewModel
-import java.text.SimpleDateFormat
-import java.time.LocalDateTime
 import java.util.*
 
 
@@ -56,6 +49,10 @@ class DetailViewActivity : AppCompatActivity(), DateTimePicker.OnDateTimeSelecte
 
         dateTimePicker = DateTimePicker(this, this)
 
+        setupBindings()
+    }
+
+    private fun setupBindings() {
         binding.pickDateTimeBtn.setOnClickListener {
             dateTimePicker.show()
         }
@@ -65,9 +62,19 @@ class DetailViewActivity : AppCompatActivity(), DateTimePicker.OnDateTimeSelecte
         binding.planningProblemDetailView.addTextChangedListener(this)
         binding.ideasDetailView.addTextChangedListener(this)
         binding.deleteEntryBtn.setOnClickListener {
-            addEntry()
-            viewModel.deleteEntry(entry.id)
-            finish()
+            val alertDialog: AlertDialog = this.let {
+                val builder = AlertDialog.Builder(it)
+                builder.apply {
+                    setMessage("Really delete? This cannot be undone!")
+                    setNegativeButton("Delete") { _, _ ->
+                        viewModel.deleteEntry(entry.id)
+                        finish()
+                    }
+                    setPositiveButton(R.string.cancel) { _, _ -> }
+                }
+                builder.create()
+            }
+            alertDialog.show()
         }
     }
 
@@ -78,7 +85,7 @@ class DetailViewActivity : AppCompatActivity(), DateTimePicker.OnDateTimeSelecte
         if (entryId < 0) {
             entry = Entry()
             setEntry()
-            addEntry()
+            viewModel.addEntry(entry)
             return
         }
 
@@ -106,8 +113,8 @@ class DetailViewActivity : AppCompatActivity(), DateTimePicker.OnDateTimeSelecte
         binding.entry = entry
     }
 
-    private fun addEntry() {
-        viewModel.addEntry(entry)
+    private fun updateEntry() {
+        viewModel.updateEntry(entry)
     }
 
     companion object {
@@ -115,14 +122,14 @@ class DetailViewActivity : AppCompatActivity(), DateTimePicker.OnDateTimeSelecte
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        addEntry()
+        updateEntry()
         finish()
         return super.onSupportNavigateUp()
     }
 
     override fun onSelected(datetime: Long) {
         entry.datetime = datetime
-        addEntry()
+        updateEntry()
     }
 
     override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -141,7 +148,7 @@ class DetailViewActivity : AppCompatActivity(), DateTimePicker.OnDateTimeSelecte
         val now = Calendar.getInstance().timeInMillis
         if (now > lastUpdate + 10000) {
             lastUpdate = now
-            addEntry()
+            updateEntry()
         }
     }
 
@@ -149,6 +156,6 @@ class DetailViewActivity : AppCompatActivity(), DateTimePicker.OnDateTimeSelecte
         val internal: Boolean = (group?.getChildAt(0) as RadioButton).isChecked
         Log.d(TAG, "onCheckedChanged: $internal")
 
-        addEntry()
+        updateEntry()
     }
 }

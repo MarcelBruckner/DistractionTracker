@@ -19,8 +19,12 @@ class FirebaseDao(
     private val db = Firebase.firestore
 
     init {
+        reloadDatabase()
+    }
+
+    override fun reloadDatabase() {
         fetchEntries()
-        refresh()
+        super.reloadDatabase()
     }
 
     private fun fetchEntries() {
@@ -38,9 +42,7 @@ class FirebaseDao(
             }
     }
 
-    override fun addEntry(entry: Entry) {
-        super.addEntry(entry)
-
+    private fun uploadEntry(entry: Entry) {
         db.collection("users").document(user.uid)
             .collection("entries").document(entry.id.toString()).set(entry)
             .addOnSuccessListener {
@@ -51,6 +53,16 @@ class FirebaseDao(
             .addOnFailureListener { e ->
                 Log.w(TAG, "Error adding $entry", e)
             }
+    }
+
+    override fun addEntry(entry: Entry) {
+        super.addEntry(entry)
+        uploadEntry(entry)
+    }
+
+    override fun updateEntry(entry: Entry) {
+        super.updateEntry(entry)
+        uploadEntry(entry)
     }
 
     override fun deleteEntry(entryId: Long) {

@@ -6,17 +6,15 @@ class EntryRepository private constructor(
     private val entryDao: DatabaseAccessObject
 ) {
 
-    fun addEntry(entry: Entry) {
-        entryDao.addEntry(entry)
-    }
+    fun addEntry(entry: Entry) = entryDao.addEntry(entry)
 
-    fun getEntries(): LiveData<List<Entry>> {
-        return entryDao.getEntries()
-    }
+    fun updateEntry(entry: Entry) = entryDao.updateEntry(entry)
 
-    fun deleteEntry(entryId: Long) {
-        entryDao.deleteEntry(entryId)
-    }
+    fun getEntries(): LiveData<List<Entry>> = entryDao.getEntries()
+
+    fun deleteEntry(entryId: Long) = entryDao.deleteEntry(entryId)
+
+    fun reloadDatabase() = entryDao.reloadDatabase()
 
     companion object {
         @Volatile

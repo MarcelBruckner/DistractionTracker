@@ -15,8 +15,18 @@ abstract class DatabaseAccessObject {
         entries.value = entryList
     }
 
+    open fun reloadDatabase() {
+        refresh()
+    }
+
     open fun addEntry(entry: Entry) {
         entryList.add(entry)
+        refresh()
+    }
+
+    open fun updateEntry(entry: Entry) {
+        val toReplace = entryList.find { it.id == entry.id } ?: return
+        entryList[entryList.indexOf(toReplace)] = entry
         refresh()
     }
 
