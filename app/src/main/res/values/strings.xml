@@ -22,4 +22,6 @@
     <string name="header_image">Header image</string>
     <string name="add_distraction">Add Distraction</string>
     <string name="reload">Reload</string>
+    <string name="the_logout_button">The logout button</string>
+    <string name="delete_account_button">Delete account button</string>
 </resources>

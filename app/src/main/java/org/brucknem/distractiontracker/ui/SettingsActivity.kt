@@ -6,16 +6,20 @@ import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import com.firebase.ui.auth.AuthUI
 import org.brucknem.distractiontracker.R
+import org.brucknem.distractiontracker.databinding.ActivitySettingsBinding
 
 class SettingsActivity : AppCompatActivity() {
 
+    private lateinit var binding: ActivitySettingsBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        setContentView(R.layout.activity_settings)
-        findViewById<Button>(R.id.sign_out).setOnClickListener {
+        binding = ActivitySettingsBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        binding.signOut.setOnClickListener {
             AuthUI.getInstance()
                 .signOut(this)
                 .addOnCompleteListener {
@@ -23,7 +27,7 @@ class SettingsActivity : AppCompatActivity() {
                 }
         }
 
-        findViewById<Button>(R.id.delete_account).setOnClickListener {
+        binding.deleteAccount.setOnClickListener {
             // 1. Instantiate an <code><a href="/reference/android/app/AlertDialog.Builder.html">AlertDialog.Builder</a></code> with its constructor
             val builder: AlertDialog.Builder = this.let {
                 AlertDialog.Builder(it)
