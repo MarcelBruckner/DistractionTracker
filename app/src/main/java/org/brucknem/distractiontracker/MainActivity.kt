@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Button
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -16,6 +15,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnClickListener {
 
@@ -48,17 +48,24 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnClickListener {
         db.collection("users").document(user.uid)
             .collection("entries").get()
             .addOnSuccessListener { result ->
-                entries.clear()
+                val resultMap: MutableMap<Long, Pair<String, Entry>> = mutableMapOf()
                 for (document in result) {
                     Log.d(TAG, "${document.id} => ${document.data}")
-                    entryIds.add(document.id)
-                    entries.add(Entry(document.data as Map<String, Any>))
+                    val entry = Entry(document.data as Map<String, Any>)
+                    resultMap[entry.datetime] = Pair(document.id, entry)
                 }
+
+                entries.clear()
+                entryIds.clear()
+                for (entry in resultMap.toSortedMap().asIterable().reversed()) {
+                    entryIds.add(entry.value.first)
+                    entries.add(entry.value.second)
+                }
+
                 initRecyclerView()
                 swipeRefresh.isRefreshing = false
                 Toast.makeText(this, "Successfully fetched entries", Toast.LENGTH_SHORT).show()
-            }
-            .addOnFailureListener { exception ->
+            }.addOnFailureListener { exception ->
                 Log.w(TAG, "Error getting entries", exception)
                 swipeRefresh.isRefreshing = false
                 Toast.makeText(this, "Error fetching entries", Toast.LENGTH_LONG).show()

@@ -81,6 +81,11 @@ class AddEntryActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener
             ideas = findViewById<EditText>(R.id.ideas_add_entry).text.toString()
         )
 
+        if (newEntry.distraction.isNullOrEmpty() || newEntry.howFeeling.isNullOrEmpty() || newEntry.ideas.isNullOrEmpty()) {
+            Toast.makeText(this, "Please fill out all fields.", Toast.LENGTH_SHORT).show()
+            return
+        }
+
         Log.d(TAG, "onAddEntry: $newEntry")
 
         val user = FirebaseAuth.getInstance().currentUser
@@ -113,7 +118,7 @@ class AddEntryActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener
     }
 
     override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
-        myDay = day
+        myDay = dayOfMonth
         myYear = year
         myMonth = month
         val calendar: Calendar = Calendar.getInstance()

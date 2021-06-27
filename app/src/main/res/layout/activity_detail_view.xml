@@ -62,7 +62,8 @@
                     android:layout_marginStart="10dp"
 
                     android:text="@string/distraction"
-                    android:textSize="20sp" />
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
             </LinearLayout>
 
             <LinearLayout
@@ -146,7 +147,8 @@
                     android:layout_marginStart="10dp"
 
                     android:text="@string/ideas"
-                    android:textSize="20sp" />
+                    android:textSize="20sp"
+                    android:textStyle="bold|italic" />
 
             </LinearLayout>
 

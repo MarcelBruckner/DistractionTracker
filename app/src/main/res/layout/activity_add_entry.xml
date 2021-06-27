@@ -56,7 +56,7 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/distraction"
                 android:autofillHints="@string/distraction"
-                android:inputType="text" />
+                android:inputType="textMultiLine" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -78,7 +78,7 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/how_feeling"
                 android:autofillHints="@string/how_feeling"
-                android:inputType="text" />
+                android:inputType="textMultiLine" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -107,7 +107,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/internal"
                     android:checked="true"
-                    android:buttonTint="@color/colorPrimary" />
+                    android:buttonTint="@color/primary" />
 
                 <Space
                     android:layout_width="30dp"
@@ -116,7 +116,8 @@
                 <RadioButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/external" />
+                    android:text="@string/external"
+                    android:buttonTint="@color/primary" />
             </RadioGroup>
 
             <TextView
@@ -139,7 +140,7 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/planning_problem"
                 android:autofillHints="@string/planning_problem"
-                android:inputType="text" />
+                android:inputType="textMultiLine" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -161,7 +162,7 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/ideas"
                 android:autofillHints="@string/ideas"
-                android:inputType="text" />
+                android:inputType="textMultiLine" />
 
             <TextView
                 android:layout_width="match_parent"

@@ -13,66 +13,80 @@
         android:layout_centerVertical="true" />
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/datetime_listitem"
         android:text="@string/pick_date_and_time"
         android:layout_toEndOf="@+id/image"
+        android:lines="1"
+        android:ellipsize="end"
 
         android:layout_centerVertical="false"
         android:layout_marginStart="30dp" />
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/distraction_listitem"
         android:text="@string/distraction"
         android:layout_toEndOf="@+id/image"
         android:layout_below="@+id/datetime_listitem"
+        android:lines="1"
+        android:ellipsize="end"
+        android:textStyle="bold"
 
         android:layout_centerVertical="false"
         android:layout_marginStart="30dp" />
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/how_feeling_listitem"
         android:text="@string/how_feeling"
         android:layout_toEndOf="@+id/image"
         android:layout_below="@+id/distraction_listitem"
+        android:lines="1"
+        android:ellipsize="end"
 
         android:layout_centerVertical="false"
         android:layout_marginStart="30dp" />
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/trigger_listitem"
         android:text="@string/trigger"
         android:layout_toEndOf="@+id/image"
         android:layout_below="@+id/how_feeling_listitem"
+        android:lines="1"
+        android:ellipsize="end"
 
         android:layout_centerVertical="false"
         android:layout_marginStart="30dp" />
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/planning_problem_listitem"
         android:text="@string/planning_problem"
         android:layout_toEndOf="@+id/image"
         android:layout_below="@+id/trigger_listitem"
+        android:lines="1"
+        android:ellipsize="end"
 
         android:layout_centerVertical="false"
         android:layout_marginStart="30dp" />
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/ideas_listitem"
-        android:text="@string/planning_problem"
+        android:text="@string/ideas"
         android:layout_toEndOf="@+id/image"
         android:layout_below="@+id/planning_problem_listitem"
+        android:lines="1"
+        android:ellipsize="end"
+        android:textStyle="bold|italic"
 
         android:layout_centerVertical="false"
         android:layout_marginStart="30dp" />
