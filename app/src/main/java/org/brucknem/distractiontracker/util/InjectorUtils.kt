@@ -17,10 +17,10 @@ object InjectorUtils {
         )
     }
 
-    fun provideFirebaseEntriesViewModelFactory(user: FirebaseUser): EntriesViewModelFactory {
+    fun provideFirebaseEntriesViewModelFactory(): EntriesViewModelFactory {
         return EntriesViewModelFactory(
             EntryRepository.getInstance(
-                FirebaseDatabase.getInstance(user).entryDao
+                FirebaseDatabase.getInstance().entryDao
             )
         )
     }

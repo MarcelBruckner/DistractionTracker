@@ -2,18 +2,16 @@ package org.brucknem.distractiontracker.data
 
 import com.google.firebase.auth.FirebaseUser
 
-class FirebaseDatabase private constructor(
-    user: FirebaseUser
-) {
-    var entryDao = FirebaseDao(user)
+class FirebaseDatabase private constructor() {
+    var entryDao = FirebaseDao()
         private set
 
     companion object {
         @Volatile
         private var instance: FirebaseDatabase? = null
 
-        fun getInstance(user: FirebaseUser) = instance ?: synchronized(this) {
-            instance ?: FirebaseDatabase(user).also { instance = it }
+        fun getInstance() = instance ?: synchronized(this) {
+            instance ?: FirebaseDatabase().also { instance = it }
         }
     }
 }

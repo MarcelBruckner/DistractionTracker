@@ -42,7 +42,7 @@ class DetailViewActivity : AppCompatActivity(), DateTimePicker.OnDateTimeSelecte
 
         user = UserManager.checkUserLoggedIn(this) ?: return
         viewModel =
-            ViewModelProvider(this, InjectorUtils.provideFirebaseEntriesViewModelFactory(user)).get(
+            ViewModelProvider(this, InjectorUtils.provideFirebaseEntriesViewModelFactory()).get(
                 EntriesViewModel::class.java
             )
         getIncomingIntent()

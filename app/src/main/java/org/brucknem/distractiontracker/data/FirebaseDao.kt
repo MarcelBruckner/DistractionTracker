@@ -10,11 +10,10 @@ import com.google.firebase.ktx.Firebase
 import org.brucknem.distractiontracker.R
 import org.brucknem.distractiontracker.ui.DetailViewActivity
 import org.brucknem.distractiontracker.ui.MainActivity
+import org.brucknem.distractiontracker.util.UserManager
 
 
-class FirebaseDao(
-    private var user: FirebaseUser
-) : DatabaseAccessObject() {
+class FirebaseDao : DatabaseAccessObject() {
 
     private val db = Firebase.firestore
 
@@ -28,6 +27,8 @@ class FirebaseDao(
     }
 
     private fun fetchEntries() {
+        val user = UserManager.checkUserLoggedIn() ?: return
+
         db.collection("users").document(user.uid)
             .collection("entries").get()
             .addOnSuccessListener { result ->
@@ -42,7 +43,9 @@ class FirebaseDao(
             }
     }
 
-    private fun uploadEntry(entry: Entry) {
+    private fun uploadEntry(entry: Entry): Boolean {
+        val user = UserManager.checkUserLoggedIn() ?: return false
+
         db.collection("users").document(user.uid)
             .collection("entries").document(entry.id.toString()).set(entry)
             .addOnSuccessListener {
@@ -53,6 +56,7 @@ class FirebaseDao(
             .addOnFailureListener { e ->
                 Log.w(TAG, "Error adding $entry", e)
             }
+        return true
     }
 
     override fun addEntry(entry: Entry) {
@@ -66,6 +70,7 @@ class FirebaseDao(
     }
 
     override fun deleteEntry(entryId: Long) {
+        val user = UserManager.checkUserLoggedIn() ?: return
         super.deleteEntry(entryId)
 
         db.collection("users").document(user.uid)

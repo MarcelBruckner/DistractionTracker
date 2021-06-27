@@ -29,22 +29,31 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnEntryClickListen
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        viewModel =
+            ViewModelProvider(this, InjectorUtils.provideFirebaseEntriesViewModelFactory()).get(
+                EntriesViewModel::class.java
+            )
         binding.swipeRefresh.setOnRefreshListener {
+            initializeUI()
             viewModel.reloadDatabase()
+            initializeUI()
             binding.swipeRefresh.isRefreshing = false
         }
 
         binding.floatingActionButton.setOnClickListener {
             switchToDetail(-1)
         }
+        initializeUI()
     }
 
     private fun initializeUI() {
         user = UserManager.checkUserLoggedIn(this) ?: return
-        viewModel =
-            ViewModelProvider(this, InjectorUtils.provideFirebaseEntriesViewModelFactory(user)).get(
-                EntriesViewModel::class.java
-            )
+
+        if (UserManager.wasLoggedOut) {
+            viewModel.reloadDatabase()
+            UserManager.wasLoggedOut = false
+        }
+
         viewModel.getEntries().observe(this, {
             initRecyclerView(entries = it)
         })
@@ -58,7 +67,7 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnEntryClickListen
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.reload -> {
-                viewModel.reloadDatabase()
+                initializeUI()
                 binding.swipeRefresh.isRefreshing = false
                 true
             }
