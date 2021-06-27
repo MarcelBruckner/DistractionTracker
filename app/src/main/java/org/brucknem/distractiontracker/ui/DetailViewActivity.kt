@@ -14,7 +14,7 @@ import org.brucknem.distractiontracker.R
 import org.brucknem.distractiontracker.data.Entry
 import org.brucknem.distractiontracker.databinding.ActivityDetailViewBinding
 import org.brucknem.distractiontracker.util.InjectorUtils
-import org.brucknem.distractiontracker.util.UserProvider
+import org.brucknem.distractiontracker.util.UserManager
 import org.brucknem.distractiontracker.viewmodel.EntriesViewModel
 import java.util.*
 
@@ -40,7 +40,7 @@ class DetailViewActivity : AppCompatActivity(), DateTimePicker.OnDateTimeSelecte
         setContentView(binding.root)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        user = UserProvider.checkUserLoggedIn(this) ?: return
+        user = UserManager.checkUserLoggedIn(this) ?: return
         viewModel =
             ViewModelProvider(this, InjectorUtils.provideFirebaseEntriesViewModelFactory(user)).get(
                 EntriesViewModel::class.java

@@ -14,7 +14,7 @@ import org.brucknem.distractiontracker.R
 import org.brucknem.distractiontracker.data.Entry
 import org.brucknem.distractiontracker.databinding.ActivityMainBinding
 import org.brucknem.distractiontracker.util.InjectorUtils
-import org.brucknem.distractiontracker.util.UserProvider
+import org.brucknem.distractiontracker.util.UserManager
 import org.brucknem.distractiontracker.viewmodel.EntriesViewModel
 
 class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnEntryClickListener {
@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnEntryClickListen
     }
 
     private fun initializeUI() {
-        user = UserProvider.checkUserLoggedIn(this) ?: return
+        user = UserManager.checkUserLoggedIn(this) ?: return
         viewModel =
             ViewModelProvider(this, InjectorUtils.provideFirebaseEntriesViewModelFactory(user)).get(
                 EntriesViewModel::class.java

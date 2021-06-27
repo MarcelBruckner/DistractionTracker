@@ -10,6 +10,7 @@ import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
 import com.firebase.ui.auth.util.ExtraConstants
 import com.google.firebase.auth.ActionCodeSettings
 import com.google.firebase.auth.FirebaseAuth
+import org.brucknem.distractiontracker.R
 
 class SignInActivity : AppCompatActivity() {
 
@@ -23,42 +24,17 @@ class SignInActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val actionCodeSettings = ActionCodeSettings.newBuilder()
-            .setAndroidPackageName( /* yourPackageName= */
-                "org.brucknem.distractiontracker",  /* installIfNotAvailable= */
-                true,  /* minimumVersion= */
-                null
-            )
-            .setHandleCodeInApp(true) // This must be set to true
-            .setUrl("https://google.com") // This URL needs to be whitelisted
-            .build()
-
         // Choose authentication providers
         val providers = arrayListOf(
             AuthUI.IdpConfig.EmailBuilder().build(),
-//            AuthUI.IdpConfig.EmailBuilder().enableEmailLinkSignIn().setActionCodeSettings(
-//                actionCodeSettings
-//            ).build(),
             AuthUI.IdpConfig.GoogleBuilder().build(),
         )
-//
-//        if (AuthUI.canHandleIntent(intent)) {
-//            val extras = intent.extras ?: return
-//            val link = extras.getString(ExtraConstants.EMAIL_LINK_SIGN_IN)
-//            if (link != null) {
-//                val signInIntent = AuthUI.getInstance()
-//                    .createSignInIntentBuilder()
-//                    .setEmailLink(link)
-//                    .setAvailableProviders(providers)
-//                    .build()
-//                signInLauncher.launch(signInIntent)
-//            }
-//        }
 
         // Create and launch sign-in intent
         val signInIntent = AuthUI.getInstance()
             .createSignInIntentBuilder()
             .setAvailableProviders(providers)
+            .setTheme(R.style.Theme_DistractionTracker)
             .build()
         signInLauncher.launch(signInIntent)
     }
