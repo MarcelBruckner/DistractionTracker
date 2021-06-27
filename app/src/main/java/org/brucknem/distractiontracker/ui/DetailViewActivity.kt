@@ -158,4 +158,11 @@ class DetailViewActivity : AppCompatActivity(), DateTimePicker.OnDateTimeSelecte
 
         updateEntry()
     }
+
+    override fun onBackPressed() {
+        updateEntry()
+        finish()
+        super.onBackPressed()
+    }
 }
+
