@@ -29,13 +29,6 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnEntryClickListen
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        user = UserProvider.checkUserLoggedIn(this) ?: return
-        viewModel =
-            ViewModelProvider(this, InjectorUtils.provideFirebaseEntriesViewModelFactory(user)).get(
-                EntriesViewModel::class.java
-            )
-        initializeUI()
-
         binding.swipeRefresh.setOnRefreshListener {
             viewModel.reloadDatabase()
             binding.swipeRefresh.isRefreshing = false
@@ -47,6 +40,11 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnEntryClickListen
     }
 
     private fun initializeUI() {
+        user = UserProvider.checkUserLoggedIn(this) ?: return
+        viewModel =
+            ViewModelProvider(this, InjectorUtils.provideFirebaseEntriesViewModelFactory(user)).get(
+                EntriesViewModel::class.java
+            )
         viewModel.getEntries().observe(this, {
             initRecyclerView(entries = it)
         })
