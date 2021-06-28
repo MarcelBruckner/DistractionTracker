@@ -15,16 +15,29 @@ import org.brucknem.distractiontracker.data.Entry
 import java.text.SimpleDateFormat
 
 class RecyclerViewAdapter(
-    private var entries: List<Entry>,
     private var context: Context,
+    private var entries: List<Entry>,
+    private var entriesToShow: EntriesToShow,
     private var onClickListener: OnEntryClickListener
 ) : RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>() {
 
     private val imageUrl = "https://cdn2.thecatapi.com/images/c2r.jpg"
     private var dateFormat: java.text.DateFormat = SimpleDateFormat.getDateTimeInstance();
 
+    enum class EntriesToShow {
+        ALL,
+        INTERNAL_TRIGGER,
+        EXTERNAL_TRIGGER,
+        PLANNING_PROBLEM
+    }
+
     companion object {
         private const val TAG = "RecyclerViewAdapter"
+    }
+
+    fun setEntriesToShow(entriesToShow: EntriesToShow) {
+        this.entriesToShow = entriesToShow
+        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -42,6 +55,14 @@ class RecyclerViewAdapter(
             .into(holder.image)
 
         val entry = entries[position]
+
+        holder.hide()
+        when (entriesToShow) {
+            EntriesToShow.ALL -> holder.show()
+            EntriesToShow.INTERNAL_TRIGGER -> if (entry.internalTrigger) holder.show()
+            EntriesToShow.EXTERNAL_TRIGGER -> if (entry.externalTrigger) holder.show()
+            EntriesToShow.PLANNING_PROBLEM -> if (entry.planningProblem) holder.show()
+        }
 
         holder.entryId = entry.id
         holder.datetime.text = dateFormat.format(entry.datetime)
@@ -70,6 +91,19 @@ class RecyclerViewAdapter(
 
         init {
             itemView.setOnClickListener(this)
+        }
+
+        fun hide() {
+            itemView.visibility = View.GONE
+            itemView.layoutParams = RecyclerView.LayoutParams(0, 0)
+        }
+
+        fun show() {
+            itemView.visibility = View.VISIBLE
+            itemView.layoutParams = RecyclerView.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            )
         }
 
         override fun onClick(v: View?) {

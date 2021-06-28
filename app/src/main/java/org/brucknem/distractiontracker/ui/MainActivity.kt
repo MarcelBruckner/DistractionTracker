@@ -1,13 +1,11 @@
 package org.brucknem.distractiontracker.ui
 
-import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import androidx.activity.result.contract.ActivityResultContract
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -24,6 +22,7 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnEntryClickListen
     private lateinit var viewModel: EntriesViewModel
 
     private lateinit var loginIntent: Intent
+    private lateinit var recyclerViewAdapter: RecyclerViewAdapter
 
     private val loginLauncher = registerForActivityResult(
         UserManager.LoggedInResultContract()
@@ -73,6 +72,22 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnEntryClickListen
                 startActivity(settingsIntent)
                 true
             }
+            R.id.show_all -> {
+                recyclerViewAdapter.setEntriesToShow(RecyclerViewAdapter.EntriesToShow.ALL)
+                true
+            }
+            R.id.show_internal_triggers -> {
+                recyclerViewAdapter.setEntriesToShow(RecyclerViewAdapter.EntriesToShow.INTERNAL_TRIGGER)
+                true
+            }
+            R.id.show_external_triggers -> {
+                recyclerViewAdapter.setEntriesToShow(RecyclerViewAdapter.EntriesToShow.EXTERNAL_TRIGGER)
+                true
+            }
+            R.id.show_planning_problems -> {
+                recyclerViewAdapter.setEntriesToShow(RecyclerViewAdapter.EntriesToShow.PLANNING_PROBLEM)
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -99,13 +114,16 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnEntryClickListen
     }
 
 
-    private fun initRecyclerView(entries: List<Entry>) {
+    private fun initRecyclerView(
+        entries: List<Entry>,
+    ) {
         Log.d(TAG, "initRecyclerView: init recycler view")
 
         val recyclerView: RecyclerView = binding.recyclerView
-        val recyclerViewAdapter = RecyclerViewAdapter(
+        recyclerViewAdapter = RecyclerViewAdapter(
             context = this,
             entries = entries,
+            entriesToShow = RecyclerViewAdapter.EntriesToShow.ALL,
             onClickListener = this
         )
         recyclerView.adapter = recyclerViewAdapter

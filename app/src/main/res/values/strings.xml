@@ -24,4 +24,9 @@
     <string name="reload">Reload</string>
     <string name="the_logout_button">The logout button</string>
     <string name="delete_account_button">Delete account button</string>
+    <string name="only_show_entries">Only show entries</string>
+    <string name="show_internal_triggers">Internal triggers</string>
+    <string name="internal_trigger">Internal Trigger</string>
+    <string name="external_trigger">External Trigger</string>
+    <string name="all">All</string>
 </resources>

@@ -12,5 +12,32 @@
         android:title="@string/settings"
         app:showAsAction="ifRoom"
         android:icon="@drawable/ic_settings_icon" />
+    <item
+        android:id="@+id/only_show_entries"
+        android:title="@string/only_show_entries"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_only_show_selected_icon">
 
+        <menu>
+
+            <item
+                android:id="@+id/show_all"
+                android:title="@string/all"
+                app:showAsAction="never" />
+            <item
+                android:id="@+id/show_internal_triggers"
+                android:title="@string/internal_trigger"
+                app:showAsAction="never" />
+            <item
+                android:id="@+id/show_external_triggers"
+                android:title="@string/external_trigger"
+                app:showAsAction="never" />
+            <item
+                android:id="@+id/show_planning_problems"
+                android:title="@string/planning_problem"
+                app:showAsAction="never" />
+
+        </menu>
+
+    </item>
 </menu>
