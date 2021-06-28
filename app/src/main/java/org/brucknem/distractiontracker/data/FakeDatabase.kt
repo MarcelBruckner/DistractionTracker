@@ -12,7 +12,8 @@ class FakeDatabase private constructor() {
                 "Yeet",
                 "Good",
                 true,
-                "Idk",
+                false,
+                false,
                 "More Yeet"
             )
         )
@@ -22,7 +23,8 @@ class FakeDatabase private constructor() {
                 "Mulm",
                 "Bad",
                 true,
-                "Yes",
+                false,
+                false,
                 "Less mulm"
             )
         )

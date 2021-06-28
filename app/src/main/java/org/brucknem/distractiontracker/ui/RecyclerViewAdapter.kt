@@ -47,8 +47,7 @@ class RecyclerViewAdapter(
         holder.datetime.text = dateFormat.format(entry.datetime)
         holder.distraction.text = entry.distraction
         holder.howFeeling.text = entry.howFeeling
-        holder.trigger.text = if (entry.internal) "Internal" else "External"
-        holder.planningProblem.text = entry.planningProblem
+        holder.trigger.text = entry.triggerToString()
         holder.ideas.text = entry.ideas
     }
 
@@ -67,7 +66,6 @@ class RecyclerViewAdapter(
         var distraction: TextView = itemView.findViewById(R.id.distraction_listitem)
         var howFeeling: TextView = itemView.findViewById(R.id.how_feeling_listitem)
         var trigger: TextView = itemView.findViewById(R.id.trigger_listitem)
-        var planningProblem: TextView = itemView.findViewById(R.id.planning_problem_listitem)
         var ideas: TextView = itemView.findViewById(R.id.ideas_listitem)
 
         init {

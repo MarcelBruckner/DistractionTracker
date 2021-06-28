@@ -12,6 +12,8 @@ abstract class DatabaseAccessObject {
     }
 
     fun refresh() {
+        entryList.sortBy { it.datetime }
+        entryList.reverse()
         entries.value = entryList
     }
 

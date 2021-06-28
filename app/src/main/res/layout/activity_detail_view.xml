@@ -141,7 +141,7 @@
                             android:layout_height="wrap_content"
                             android:text="@string/internal"
                             android:layout_weight="1"
-                            android:checked="@={entry.internal}"
+                            android:checked="@={entry.internalTrigger}"
                             android:buttonTint="@color/primary" />
 
                         <RadioButton
@@ -150,29 +150,18 @@
                             android:layout_height="wrap_content"
                             android:text="@string/external"
                             android:layout_weight="1"
-                            android:checked="@={!entry.internal}"
+                            android:checked="@={entry.externalTrigger}"
+                            android:buttonTint="@color/primary" />
+
+                        <RadioButton
+                            android:id="@+id/planning_problem_detail_view"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/planning_problem"
+                            android:layout_weight="1"
+                            android:checked="@={entry.planningProblem}"
                             android:buttonTint="@color/primary" />
                     </RadioGroup>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginTop="10dp">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/planning_problem" />
-
-                    <EditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/planning_problem_detail_view"
-                        android:layout_marginStart="10dp"
-
-                        android:text="@={entry.planningProblem}" />
                 </LinearLayout>
 
                 <LinearLayout

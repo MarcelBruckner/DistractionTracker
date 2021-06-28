@@ -9,7 +9,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
-import com.google.firebase.auth.FirebaseUser
 import org.brucknem.distractiontracker.R
 import org.brucknem.distractiontracker.data.Entry
 import org.brucknem.distractiontracker.databinding.ActivityDetailViewBinding
@@ -29,7 +28,9 @@ class DetailViewActivity : AppCompatActivity(), DateTimePicker.OnDateTimeSelecte
     private lateinit var dateTimePicker: DateTimePicker
 
     private var lastUpdate = Calendar.getInstance().timeInMillis
-    private var isOpening = true
+    private var preventOnSelectedCallbackInOnCreate = true
+
+    private lateinit var latestUploadedEntry: Entry
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -114,21 +115,20 @@ class DetailViewActivity : AppCompatActivity(), DateTimePicker.OnDateTimeSelecte
             .into(findViewById(R.id.detail_image))
 
         binding.entry = entry
+        latestUploadedEntry = entry.copy()
     }
 
     private fun updateEntry() {
-        viewModel.updateEntry(entry)
+        if (!entry.isEmpty() && entry != latestUploadedEntry) {
+            viewModel.updateEntry(entry)
+            latestUploadedEntry = entry.copy()
+        }
     }
 
     companion object {
         private const val TAG = "DetailView"
     }
 
-    override fun onSupportNavigateUp(): Boolean {
-        updateEntry()
-        finish()
-        return super.onSupportNavigateUp()
-    }
 
     override fun onSelected(datetime: Long) {
         entry.datetime = datetime
@@ -156,14 +156,19 @@ class DetailViewActivity : AppCompatActivity(), DateTimePicker.OnDateTimeSelecte
     }
 
     override fun onCheckedChanged(group: RadioGroup?, checkedId: Int) {
-        if (isOpening) {
-            isOpening = false
+        if (preventOnSelectedCallbackInOnCreate) {
+            preventOnSelectedCallbackInOnCreate = false
             return
         }
-        val internal: Boolean = (group?.getChildAt(0) as RadioButton).isChecked
-        Log.d(TAG, "onCheckedChanged: $internal")
+        Log.d(TAG, "onCheckedChanged: called")
 
         updateEntry()
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        updateEntry()
+        finish()
+        return super.onSupportNavigateUp()
     }
 
     override fun onBackPressed() {

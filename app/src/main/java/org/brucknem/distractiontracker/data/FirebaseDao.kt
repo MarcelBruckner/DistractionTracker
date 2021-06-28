@@ -9,6 +9,7 @@ import org.brucknem.distractiontracker.util.UserManager
 class FirebaseDao : DatabaseAccessObject() {
 
     private val db = Firebase.firestore
+    private var latestUploadedEntry: Entry? = null
 
     init {
         reloadDatabase()
@@ -29,8 +30,6 @@ class FirebaseDao : DatabaseAccessObject() {
                     Log.d(TAG, "${it.id} => ${it.data}")
                     entryList.add(Entry(it.data as Map<String, Any>))
                 }
-                entryList.sortBy { it.datetime }
-                entryList.reverse()
                 refresh()
             }.addOnFailureListener { exception ->
                 Log.w(TAG, "Error getting entries", exception)
@@ -39,6 +38,11 @@ class FirebaseDao : DatabaseAccessObject() {
 
     private fun uploadEntry(entry: Entry): Boolean {
         val user = UserManager.getCurrentUser() ?: return false
+
+        if (latestUploadedEntry != null && (entry == latestUploadedEntry || entry.isEmpty())) {
+            return false
+        }
+        latestUploadedEntry = entry.copy()
 
         db.collection("users").document(user.uid)
             .collection("entries").document(entry.id.toString()).set(entry)
