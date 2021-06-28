@@ -2,8 +2,11 @@ package org.brucknem.distractiontracker.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import org.brucknem.distractiontracker.databinding.ActivitySettingsBinding
+import org.brucknem.distractiontracker.util.InjectorUtils
 import org.brucknem.distractiontracker.util.UserManager
+import org.brucknem.distractiontracker.viewmodel.EntriesViewModel
 
 class SettingsActivity : AppCompatActivity(), UserManager.OnLoggedOutListener {
 
@@ -32,6 +35,11 @@ class SettingsActivity : AppCompatActivity(), UserManager.OnLoggedOutListener {
     }
 
     override fun onLoggedOut() {
+        val viewModel =
+            ViewModelProvider(this, InjectorUtils.provideFirebaseEntriesViewModelFactory()).get(
+                EntriesViewModel::class.java
+            )
+        viewModel.clear()
         finish()
     }
 

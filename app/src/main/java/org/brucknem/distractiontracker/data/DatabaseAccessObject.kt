@@ -36,5 +36,10 @@ abstract class DatabaseAccessObject {
         refresh()
     }
 
+    fun clear() {
+        entryList.clear()
+        refresh()
+    }
+
     open fun getEntries() = entries as LiveData<List<Entry>>
 }

@@ -1,15 +1,16 @@
 package org.brucknem.distractiontracker.ui
 
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import androidx.activity.result.contract.ActivityResultContract
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.firebase.auth.FirebaseUser
 import org.brucknem.distractiontracker.R
 import org.brucknem.distractiontracker.data.Entry
 import org.brucknem.distractiontracker.databinding.ActivityMainBinding
@@ -20,8 +21,16 @@ import org.brucknem.distractiontracker.viewmodel.EntriesViewModel
 class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnEntryClickListener {
 
     private lateinit var binding: ActivityMainBinding
-    private lateinit var user: FirebaseUser
     private lateinit var viewModel: EntriesViewModel
+
+    private lateinit var loginIntent: Intent
+
+    private val loginLauncher = registerForActivityResult(
+        UserManager.LoggedInResultContract()
+    ) {
+        viewModel.reloadDatabase()
+        this.loginIfNecessary()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,29 +38,23 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnEntryClickListen
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        loginIntent = Intent(this, SignInActivity::class.java)
+
         viewModel =
             ViewModelProvider(this, InjectorUtils.provideFirebaseEntriesViewModelFactory()).get(
                 EntriesViewModel::class.java
             )
         binding.swipeRefresh.setOnRefreshListener {
-            initializeUI()
-            binding.swipeRefresh.isRefreshing = false
+            reloadDatabase()
         }
 
         binding.floatingActionButton.setOnClickListener {
             switchToDetail(-1)
         }
-        initializeUI()
 
         viewModel.getEntries().observe(this, {
             initRecyclerView(entries = it)
         })
-    }
-
-    private fun initializeUI() {
-        user = UserManager.checkUserLoggedIn(this) ?: return
-
-        viewModel.reloadDatabase()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -62,8 +65,7 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnEntryClickListen
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.reload -> {
-                initializeUI()
-                binding.swipeRefresh.isRefreshing = false
+                reloadDatabase()
                 true
             }
             R.id.settings -> {
@@ -75,10 +77,25 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnEntryClickListen
         }
     }
 
+    private fun reloadDatabase() {
+        if (loginIfNecessary()) {
+            return
+        }
+        viewModel.reloadDatabase()
+        binding.swipeRefresh.isRefreshing = false
+    }
+
+    private fun loginIfNecessary(): Boolean {
+        if (UserManager.getCurrentUser() == null) {
+            loginLauncher.launch(loginIntent)
+            return true
+        }
+        return false
+    }
 
     override fun onStart() {
         super.onStart()
-        initializeUI()
+        loginIfNecessary()
     }
 
 

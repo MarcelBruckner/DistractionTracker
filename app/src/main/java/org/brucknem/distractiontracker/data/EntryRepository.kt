@@ -16,6 +16,8 @@ class EntryRepository private constructor(
 
     fun reloadDatabase() = entryDao.reloadDatabase()
 
+    fun clear() = entryDao.clear()
+
     companion object {
         @Volatile
         private var instance: EntryRepository? = null

@@ -21,6 +21,8 @@ class SignInActivity : AppCompatActivity() {
         this.onSignInResult(res)
     }
 
+    private lateinit var signInIntent: Intent
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -31,7 +33,7 @@ class SignInActivity : AppCompatActivity() {
         )
 
         // Create and launch sign-in intent
-        val signInIntent = AuthUI.getInstance()
+        signInIntent = AuthUI.getInstance()
             .createSignInIntentBuilder()
             .setAvailableProviders(providers)
             .setTheme(R.style.Theme_DistractionTracker)
@@ -43,9 +45,10 @@ class SignInActivity : AppCompatActivity() {
     private fun onSignInResult(result: FirebaseAuthUIAuthenticationResult) {
         if (result.resultCode == RESULT_OK) {
             Toast.makeText(this, "Successfully logged in", Toast.LENGTH_SHORT).show()
+            finish()
         } else {
             Toast.makeText(this, "Login failed", Toast.LENGTH_LONG).show()
+            signInLauncher.launch(signInIntent)
         }
-        finish()
     }
 }

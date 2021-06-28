@@ -3,23 +3,32 @@ package org.brucknem.distractiontracker.util
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
-import androidx.core.content.ContextCompat.startActivity
+import android.util.Log
+import androidx.activity.result.contract.ActivityResultContract
+import androidx.lifecycle.ViewModelProvider
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import org.brucknem.distractiontracker.ui.SignInActivity
+import org.brucknem.distractiontracker.ui.MainActivity
+import org.brucknem.distractiontracker.viewmodel.EntriesViewModel
 
 object UserManager {
 
-    fun checkUserLoggedIn(context: Context? = null): FirebaseUser? {
-        val user = FirebaseAuth.getInstance().currentUser
+    private const val TAG = "UserManager"
 
-        if (user == null && context != null) {
-            val signInIntent = Intent(context, SignInActivity::class.java)
-            startActivity(context, signInIntent, null)
+    class LoggedInResultContract : ActivityResultContract<Intent, Boolean>() {
+        override fun createIntent(context: Context, input: Intent?): Intent {
+            return input!!
         }
 
-        return user
+        override fun parseResult(resultCode: Int, intent: Intent?): Boolean {
+            Log.d(TAG, "parseResult: resultCode $resultCode")
+            return true
+        }
+    }
+
+    fun getCurrentUser(): FirebaseUser? {
+        return FirebaseAuth.getInstance().currentUser
     }
 
     fun logout(context: Context, onLoggedOutListener: OnLoggedOutListener) {

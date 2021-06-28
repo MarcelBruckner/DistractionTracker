@@ -40,7 +40,11 @@ class DetailViewActivity : AppCompatActivity(), DateTimePicker.OnDateTimeSelecte
         setContentView(binding.root)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        user = UserManager.checkUserLoggedIn(this) ?: return
+        if (UserManager.getCurrentUser() == null) {
+            finish()
+            return
+        }
+        
         viewModel =
             ViewModelProvider(this, InjectorUtils.provideFirebaseEntriesViewModelFactory()).get(
                 EntriesViewModel::class.java

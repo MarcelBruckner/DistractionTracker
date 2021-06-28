@@ -1,15 +1,8 @@
 package org.brucknem.distractiontracker.data
 
 import android.util.Log
-import android.widget.Button
-import android.widget.Toast
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import org.brucknem.distractiontracker.R
-import org.brucknem.distractiontracker.ui.DetailViewActivity
-import org.brucknem.distractiontracker.ui.MainActivity
 import org.brucknem.distractiontracker.util.UserManager
 
 
@@ -26,7 +19,7 @@ class FirebaseDao : DatabaseAccessObject() {
     }
 
     private fun fetchEntries() {
-        val user = UserManager.checkUserLoggedIn() ?: return
+        val user = UserManager.getCurrentUser() ?: return
 
         db.collection("users").document(user.uid)
             .collection("entries").get()
@@ -45,7 +38,7 @@ class FirebaseDao : DatabaseAccessObject() {
     }
 
     private fun uploadEntry(entry: Entry): Boolean {
-        val user = UserManager.checkUserLoggedIn() ?: return false
+        val user = UserManager.getCurrentUser() ?: return false
 
         db.collection("users").document(user.uid)
             .collection("entries").document(entry.id.toString()).set(entry)
@@ -71,7 +64,7 @@ class FirebaseDao : DatabaseAccessObject() {
     }
 
     override fun deleteEntry(entryId: Long) {
-        val user = UserManager.checkUserLoggedIn() ?: return
+        val user = UserManager.getCurrentUser() ?: return
         super.deleteEntry(entryId)
 
         db.collection("users").document(user.uid)
