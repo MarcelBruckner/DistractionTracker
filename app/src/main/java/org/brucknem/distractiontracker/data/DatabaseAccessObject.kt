@@ -25,9 +25,13 @@ abstract class DatabaseAccessObject {
     }
 
     open fun updateEntry(entry: Entry) {
-        val toReplace = entryList.find { it.id == entry.id } ?: return
-        entryList[entryList.indexOf(toReplace)] = entry
-        refresh()
+        val toReplace = entryList.find { it.id == entry.id }
+        if (toReplace != null) {
+            entryList[entryList.indexOf(toReplace)] = entry
+            refresh()
+        } else {
+            addEntry(entry)
+        }
     }
 
     open fun deleteEntry(entryId: Long) {

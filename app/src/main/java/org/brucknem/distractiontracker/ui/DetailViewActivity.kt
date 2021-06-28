@@ -22,16 +22,14 @@ import java.util.*
 class DetailViewActivity : AppCompatActivity(), DateTimePicker.OnDateTimeSelectedListener,
     TextWatcher, RadioGroup.OnCheckedChangeListener {
     private lateinit var binding: ActivityDetailViewBinding
-    private lateinit var user: FirebaseUser
     private lateinit var viewModel: EntriesViewModel
 
     private val imageUrl = "https://cdn2.thecatapi.com/images/c2r.jpg"
-
     private lateinit var entry: Entry
-
     private lateinit var dateTimePicker: DateTimePicker
 
     private var lastUpdate = Calendar.getInstance().timeInMillis
+    private var isOpening = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,7 +42,7 @@ class DetailViewActivity : AppCompatActivity(), DateTimePicker.OnDateTimeSelecte
             finish()
             return
         }
-        
+
         viewModel =
             ViewModelProvider(this, InjectorUtils.provideFirebaseEntriesViewModelFactory()).get(
                 EntriesViewModel::class.java
@@ -90,6 +88,7 @@ class DetailViewActivity : AppCompatActivity(), DateTimePicker.OnDateTimeSelecte
             entry = Entry()
 //            viewModel.addEntry(entry)
             setEntry()
+            updateEntry()
             return
         }
 
@@ -157,6 +156,10 @@ class DetailViewActivity : AppCompatActivity(), DateTimePicker.OnDateTimeSelecte
     }
 
     override fun onCheckedChanged(group: RadioGroup?, checkedId: Int) {
+        if (isOpening) {
+            isOpening = false
+            return
+        }
         val internal: Boolean = (group?.getChildAt(0) as RadioButton).isChecked
         Log.d(TAG, "onCheckedChanged: $internal")
 
