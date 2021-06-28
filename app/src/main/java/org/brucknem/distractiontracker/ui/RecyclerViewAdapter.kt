@@ -17,12 +17,13 @@ import java.text.SimpleDateFormat
 class RecyclerViewAdapter(
     private var context: Context,
     private var entries: List<Entry>,
-    private var entriesToShow: EntriesToShow,
     private var onClickListener: OnEntryClickListener
 ) : RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>() {
 
     private val imageUrl = "https://cdn2.thecatapi.com/images/c2r.jpg"
     private var dateFormat: java.text.DateFormat = SimpleDateFormat.getDateTimeInstance();
+    private var entriesToShow: EntriesToShow = EntriesToShow.ALL
+    private var ascending = true
 
     enum class EntriesToShow {
         ALL,
@@ -31,8 +32,27 @@ class RecyclerViewAdapter(
         PLANNING_PROBLEM
     }
 
+    init {
+        toggleSort(true)
+    }
+
     companion object {
         private const val TAG = "RecyclerViewAdapter"
+    }
+
+    fun toggleSort(ascending: Boolean? = null) {
+        this.ascending = ascending ?: !this.ascending
+
+        if (entries.isEmpty()) {
+            return
+        }
+
+        val sorted: ArrayList<Entry> = ArrayList(entries.sortedBy { it.datetime })
+        if (this.ascending) {
+            sorted.reverse()
+        }
+        entries = sorted
+        notifyDataSetChanged()
     }
 
     fun setEntriesToShow(entriesToShow: EntriesToShow) {

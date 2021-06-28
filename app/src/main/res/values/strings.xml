@@ -29,4 +29,5 @@
     <string name="internal_trigger">Internal Trigger</string>
     <string name="external_trigger">External Trigger</string>
     <string name="all">All</string>
+    <string name="sorting_order">Sorting order</string>
 </resources>

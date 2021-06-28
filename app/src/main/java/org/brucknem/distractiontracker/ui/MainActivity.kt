@@ -88,6 +88,10 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnEntryClickListen
                 recyclerViewAdapter.setEntriesToShow(RecyclerViewAdapter.EntriesToShow.PLANNING_PROBLEM)
                 true
             }
+            R.id.sort_order -> {
+                recyclerViewAdapter.toggleSort()
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -96,6 +100,7 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnEntryClickListen
         if (loginIfNecessary()) {
             return
         }
+        binding.swipeRefresh.isRefreshing = true
         viewModel.reloadDatabase()
         binding.swipeRefresh.isRefreshing = false
     }
@@ -123,7 +128,6 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnEntryClickListen
         recyclerViewAdapter = RecyclerViewAdapter(
             context = this,
             entries = entries,
-            entriesToShow = RecyclerViewAdapter.EntriesToShow.ALL,
             onClickListener = this
         )
         recyclerView.adapter = recyclerViewAdapter
